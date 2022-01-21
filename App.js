@@ -49,9 +49,9 @@ function LoggedInTabScreens() {
         sttabBarStyleyle: getTabBarStyles()
       }}
     >
-      <Tab.Screen name='GAMES' component={GamesScreen} />
-      <Tab.Screen name='PROFILE' component={ProfileScreen} />
-      <Tab.Screen name='INVITATIONS' component={InvitationsScreen} />
+      <Tab.Screen name='Games' component={GamesScreen} />
+      <Tab.Screen name='Profile' component={ProfileScreen} />
+      <Tab.Screen name='Invitations' component={InvitationsScreen} />
     </Tab.Navigator>
   );
 }

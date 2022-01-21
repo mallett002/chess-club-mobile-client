@@ -1,112 +1,82 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import SignUpScreen from './src/pages/auth/sign-up';
+import LogInScreen from './src/pages/auth/log-in';
+import GamesScreen from './src/pages/games/games-screen';
+import ProfileScreen from './src/pages/profile/profile-screen';
+import InvitationsScreen from './src/pages/invitations/invitations-screen';
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+// Ignore this log:
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs([
+  "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
+]);
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+const getTabBarStyles = () => {
+  const styles = {
+    borderTopWidth: 0,
+    height: 70,
+    paddingTop: 9,
+    paddingBottom: 9,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 0 }
   };
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+  if (Platform.OS === 'ios') {
+    styles.height = 90;
+    styles.paddingBottom = 23;
+  }
+
+  return styles;
 };
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+function LoggedInTabScreens() {
+  return (
+    <Tab.Navigator
+      // screenOptions={tabScreenOptions}
+      style={{ padding: 10 }}
+      screenOptions={{
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+        sttabBarStyleyle: getTabBarStyles()
+      }}
+    >
+      <Tab.Screen name='Games' component={GamesScreen} />
+      <Tab.Screen name='Profile' component={ProfileScreen} />
+      <Tab.Screen name='Invitations' component={InvitationsScreen} />
+    </Tab.Navigator>
+  );
+}
+
+function App() {
+  const accessToken = true;
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false
+        }}
+      >
+        {accessToken ? (
+          <Stack.Screen name="LoggedInScreens" component={LoggedInTabScreens} />
+        ) : (
+          <>
+            <Stack.Screen name="LOGIN" component={LogInScreen} />
+            <Stack.Screen name="SIGNUP" component={SignUpScreen} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 
 export default App;

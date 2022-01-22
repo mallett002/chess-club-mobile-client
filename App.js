@@ -9,6 +9,7 @@ import GamesScreen from './src/pages/games/games-screen';
 import ProfileScreen from './src/pages/profile/profile-screen';
 import InvitationsScreen from './src/pages/invitations/invitations-screen';
 
+
 // Ignore this log:
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs([
@@ -41,7 +42,9 @@ const getTabBarStyles = () => {
 function LoggedInTabScreens() {
   return (
     <Tab.Navigator
-      // screenOptions={tabScreenOptions}
+      screenOptions={{
+        tabBarIcon: () => null
+      }}
       style={{ padding: 10 }}
       screenOptions={{
         tabBarActiveTintColor: 'tomato',

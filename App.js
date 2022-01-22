@@ -8,6 +8,7 @@ import LogInScreen from './src/pages/auth/log-in';
 import GamesScreen from './src/pages/games/games-screen';
 import ProfileScreen from './src/pages/profile/profile-screen';
 import InvitationsScreen from './src/pages/invitations/invitations-screen';
+import Icon from 'react-native-vector-icons/Feather';
 
 
 // Ignore this log:
@@ -47,7 +48,7 @@ function LoggedInTabScreens() {
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
         tabBarStyle: getTabBarStyles(),
-        tabBarIcon: () => null
+        tabBarIcon: () => <Icon name="activity" size={20} color={'red'} />
       }}
     >
       <Tab.Screen name='Games' component={GamesScreen} />

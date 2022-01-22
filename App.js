@@ -42,14 +42,12 @@ const getTabBarStyles = () => {
 function LoggedInTabScreens() {
   return (
     <Tab.Navigator
-      screenOptions={{
-        tabBarIcon: () => null
-      }}
       style={{ padding: 10 }}
       screenOptions={{
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
-        tabBarStyle: getTabBarStyles()
+        tabBarStyle: getTabBarStyles(),
+        tabBarIcon: () => null
       }}
     >
       <Tab.Screen name='Games' component={GamesScreen} />

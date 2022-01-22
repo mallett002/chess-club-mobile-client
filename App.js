@@ -8,6 +8,8 @@ import LogInScreen from './src/pages/auth/log-in';
 import GamesScreen from './src/pages/games/games-screen';
 import ProfileScreen from './src/pages/profile/profile-screen';
 import InvitationsScreen from './src/pages/invitations/invitations-screen';
+import Icon from 'react-native-vector-icons/Feather';
+
 
 // Ignore this log:
 import { LogBox } from 'react-native';
@@ -41,12 +43,12 @@ const getTabBarStyles = () => {
 function LoggedInTabScreens() {
   return (
     <Tab.Navigator
-      // screenOptions={tabScreenOptions}
       style={{ padding: 10 }}
       screenOptions={{
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
-        sttabBarStyleyle: getTabBarStyles()
+        tabBarStyle: getTabBarStyles(),
+        tabBarIcon: () => <Icon name="activity" size={20} color={'red'} />
       }}
     >
       <Tab.Screen name='Games' component={GamesScreen} />

@@ -46,7 +46,7 @@ function LoggedInTabScreens() {
       screenOptions={{
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
-        sttabBarStyleyle: getTabBarStyles()
+        tabBarStyle: getTabBarStyles()
       }}
     >
       <Tab.Screen name='Games' component={GamesScreen} />

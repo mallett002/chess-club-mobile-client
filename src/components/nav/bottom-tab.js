@@ -5,12 +5,13 @@ import Icon from 'react-native-vector-icons/Feather';
 
 const getTabBarStyles = () => {
   const styles = {
-    
+    height: 50
+    // paddingBottom: 90
   };
 
   if (Platform.OS === 'ios') {
-    styles.height = 90;
-    styles.paddingBottom = 23;
+    // styles.height = 90;
+    // styles.paddingBottom = 23;
   }
 
   return styles;
@@ -23,16 +24,20 @@ function getIconName(label) {
     return 'user'
   }
 
-  return 'mail'
+  return 'mail';
 }
 
 const styles = StyleSheet.create({
   bottomTabContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    backgroundColor: 'gray'
   },
   tabCard: {
+    borderColor: 'black',
+    borderWidth: 1,
+    alignItems: 'center'
     // borderTopWidth: 0,
     // height: 70,
     // paddingTop: 9,
@@ -91,14 +96,12 @@ export default function BottomTab({ state, descriptors, navigation }) {
             onPress={onPress}
             onLongPress={onLongPress}
             key={label}
-            style={{
-              alignItems: 'center'
-            }}
+            style={styles.tabCard}
           >
             <Text style={{ color: isFocused ? '#673ab7' : '#222' }}>
               {label}
             </Text>
-            <Icon name={iconName} size={20} color={'red'} />
+            <Icon name={iconName} size={28} color={'black'} />
           </TouchableOpacity>
         );
       })}

@@ -27,25 +27,28 @@ function getIconName(label) {
   return 'mail';
 }
 
+const colors = {
+  CHARCOAL: '#2F4454',
+  DARK_MAROON: '#2E151B',
+  PINK: '#DA7B93',
+  TEAL: '#376E6F',
+  DARK_CHARCOAL: '#1C3334',
+  WHITE: '#FFFFFF'
+};
+
 const styles = StyleSheet.create({
   bottomTabContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    backgroundColor: 'gray'
+    alignItems: 'center',
+    minHeight: 70,
+    backgroundColor: colors.CHARCOAL
   },
   tabCard: {
-    borderColor: 'black',
-    borderWidth: 1,
-    alignItems: 'center'
-    // borderTopWidth: 0,
-    // height: 70,
-    // paddingTop: 9,
-    // paddingBottom: 9,
-    // shadowColor: '#000',
-    // shadowOpacity: 0.1,
-    // shadowRadius: 20,
-    // shadowOffset: { width: 0, height: 0 }
+    borderRightColor: colors.DARK_CHARCOAL,
+    borderRightWidth: 1,
+    alignItems: 'center',
+    flex: 1
   }
 })
 
@@ -55,16 +58,7 @@ export default function BottomTab({ state, descriptors, navigation }) {
     <View style={[styles.bottomTabContainer, getTabBarStyles()]}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-            ? options.title
-            : route.name;
-        const iconName = getIconName(label);
-
-            console.log({label});
-
+        const iconName = getIconName(route.name);
         const isFocused = state.index === index;
 
         const onPress = () => {
@@ -95,13 +89,13 @@ export default function BottomTab({ state, descriptors, navigation }) {
             testID={options.tabBarTestID}
             onPress={onPress}
             onLongPress={onLongPress}
-            key={label}
+            key={route.name}
             style={styles.tabCard}
           >
-            <Text style={{ color: isFocused ? '#673ab7' : '#222' }}>
-              {label}
+            <Text style={{ color: isFocused ? colors.PINK : colors.WHITE }}>
+              {route.name}
             </Text>
-            <Icon name={iconName} size={28} color={'black'} />
+            <Icon name={iconName} size={28} color={isFocused ? colors.PINK : colors.WHITE} />
           </TouchableOpacity>
         );
       })}

@@ -34,7 +34,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     minHeight: 70,
-    backgroundColor: colors.CHARCOAL
+    backgroundColor: colors.CHARCOAL,
+    borderTopColor: colors.DARK_CHARCOAL,
+    borderTopWidth: 1
   },
   tabCard: {
     borderRightColor: colors.DARK_CHARCOAL,

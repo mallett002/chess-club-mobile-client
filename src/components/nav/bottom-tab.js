@@ -2,6 +2,7 @@ import React from 'react';
 import {TouchableOpacity, Text, View, Platform, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
+import colors from '../../constants/colors';
 
 const getTabBarStyles = () => {
   const styles = {
@@ -26,15 +27,6 @@ function getIconName(label) {
 
   return 'mail';
 }
-
-const colors = {
-  CHARCOAL: '#2F4454',
-  DARK_MAROON: '#2E151B',
-  PINK: '#DA7B93',
-  TEAL: '#376E6F',
-  DARK_CHARCOAL: '#1C3334',
-  WHITE: '#FFFFFF'
-};
 
 const styles = StyleSheet.create({
   bottomTabContainer: {

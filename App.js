@@ -21,18 +21,7 @@ const Stack = createStackNavigator();
 
 function LoggedInTabScreens() {
   return (
-    <Tab.Navigator
-      tabBar={props => <BottomTab {...props} />}
-      // style={{ padding: 10 }}
-      // screenOptions={{
-      //   tabBarActiveTintColor: 'tomato',
-      //   tabBarInactiveTintColor: 'gray',
-      //   tabBarStyle: getTabBarStyles(),
-      //   tabBarIcon: (navigation) => {
-      //     console.log(arguments);
-      //     return <Icon name="activity" size={20} color={'red'} />
-      //   }
-      // }}
+    <Tab.Navigator tabBar={props => <BottomTab {...props} />}
     >
       <Tab.Screen name='Games' component={GamesScreen} />
       <Tab.Screen name='Profile' component={ProfileScreen} />

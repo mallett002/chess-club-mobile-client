@@ -35,15 +35,6 @@ function getIconName(label) {
 }
 
 const styles = StyleSheet.create({
-  bottomTabContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    minHeight: 70,
-    backgroundColor: colors.CHARCOAL,
-    borderTopColor: colors.DARK_CHARCOAL,
-    borderTopWidth: 1
-  },
   tabCard: {
     borderRightColor: colors.DARK_CHARCOAL,
     borderRightWidth: 1,

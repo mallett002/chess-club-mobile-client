@@ -6,13 +6,19 @@ import colors from '../../constants/colors';
 
 const getTabBarStyles = () => {
   const styles = {
-    height: 50
-    // paddingBottom: 90
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 70,
+    backgroundColor: colors.CHARCOAL,
+    borderTopColor: colors.DARK_CHARCOAL,
+    borderTopWidth: 1,
+    paddingVertical: 20
   };
 
   if (Platform.OS === 'ios') {
-    // styles.height = 90;
-    // styles.paddingBottom = 23;
+    styles.height = 90;
+    styles.paddingBottom = 28;
   }
 
   return styles;
@@ -47,9 +53,8 @@ const styles = StyleSheet.create({
 })
 
 export default function BottomTab({ state, descriptors, navigation }) {
-  console.log(JSON.stringify({state, descriptors, navigation}, null, 2));
   return (
-    <View style={[styles.bottomTabContainer, getTabBarStyles()]}>
+    <View style={getTabBarStyles()}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const iconName = getIconName(route.name);

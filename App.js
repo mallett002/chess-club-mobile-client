@@ -8,8 +8,7 @@ import LogInScreen from './src/pages/auth/log-in';
 import GamesScreen from './src/pages/games/games-screen';
 import ProfileScreen from './src/pages/profile/profile-screen';
 import InvitationsScreen from './src/pages/invitations/invitations-screen';
-import Icon from 'react-native-vector-icons/Feather';
-
+import BottomTab from './src/components/nav/bottom-tab';
 
 // Ignore this log:
 import { LogBox } from 'react-native';
@@ -20,36 +19,9 @@ LogBox.ignoreLogs([
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const getTabBarStyles = () => {
-  const styles = {
-    borderTopWidth: 0,
-    height: 70,
-    paddingTop: 9,
-    paddingBottom: 9,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: 0 }
-  };
-
-  if (Platform.OS === 'ios') {
-    styles.height = 90;
-    styles.paddingBottom = 23;
-  }
-
-  return styles;
-};
-
 function LoggedInTabScreens() {
   return (
-    <Tab.Navigator
-      style={{ padding: 10 }}
-      screenOptions={{
-        tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
-        tabBarStyle: getTabBarStyles(),
-        tabBarIcon: () => <Icon name="activity" size={20} color={'red'} />
-      }}
+    <Tab.Navigator tabBar={props => <BottomTab {...props} />}
     >
       <Tab.Screen name='Games' component={GamesScreen} />
       <Tab.Screen name='Profile' component={ProfileScreen} />

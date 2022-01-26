@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
+import { ApolloProvider } from '@apollo/client';
 
 import SignUpScreen from './src/pages/auth/sign-up';
 import LogInScreen from './src/pages/auth/log-in';
@@ -9,6 +10,7 @@ import GamesScreen from './src/pages/games/games-screen';
 import ProfileScreen from './src/pages/profile/profile-screen';
 import InvitationsScreen from './src/pages/invitations/invitations-screen';
 import BottomTab from './src/components/nav/bottom-tab';
+import { client } from './src/utils/gql-client';
 
 // Ignore this log:
 import { LogBox } from 'react-native';
@@ -34,22 +36,24 @@ function App() {
   const accessToken = true;
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false
-        }}
-      >
-        {accessToken ? (
-          <Stack.Screen name="LoggedInScreens" component={LoggedInTabScreens} />
-        ) : (
-          <>
-            <Stack.Screen name="LOGIN" component={LogInScreen} />
-            <Stack.Screen name="SIGNUP" component={SignUpScreen} />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false
+          }}
+        >
+          {accessToken ? (
+            <Stack.Screen name="LoggedInScreens" component={LoggedInTabScreens} />
+          ) : (
+            <>
+              <Stack.Screen name="LOGIN" component={LogInScreen} />
+              <Stack.Screen name="SIGNUP" component={SignUpScreen} />
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ApolloProvider>
   );
 }
 

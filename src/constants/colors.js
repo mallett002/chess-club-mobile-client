@@ -5,5 +5,6 @@ export default {
   PINK: '#DA7B93',
   TEAL: '#376E6F',
   DARK_CHARCOAL: '#1C3334',
-  WHITE: '#FFFFFF'
+  WHITE: '#FFFFFF',
+  GRAY: '#CCCCCC'
 };

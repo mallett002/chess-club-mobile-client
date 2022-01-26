@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     flex: 1
   }
 })
-
+  
 export default function BottomTab({ state, descriptors, navigation }) {
   return (
     <View style={getTabBarStyles()}>

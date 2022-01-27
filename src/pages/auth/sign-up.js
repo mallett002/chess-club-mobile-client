@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
 
-// import { useAuthentication } from '../../utils/authentication-service';
+import { useAuthentication } from '../../utils/authentication-service';
 import colors from '../../constants/colors';
 
 const { height } = Dimensions.get('window');
@@ -38,10 +38,10 @@ const SignUp = () => {
   const navigation = useNavigation();
   const [mutate, { data, loading, error }] = useMutation(CREATE_PLAYER_MUTATION);
   const goToLogIn = () => {
-    navigation.navigate('LogIn');
+    navigation.navigate('LOGIN');
   };
 
-  // useAuthentication(data);
+  useAuthentication(data);
 
   if (loading) {
     return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -11,6 +11,8 @@ import ProfileScreen from './src/pages/profile/profile-screen';
 import InvitationsScreen from './src/pages/invitations/invitations-screen';
 import BottomTab from './src/components/nav/bottom-tab';
 import { client } from './src/utils/gql-client';
+import { AppContext } from './src/utils/context';
+import { getTokenFromStorage, decodeJwt } from './src/utils/token-utils';
 
 // Ignore this log:
 import { LogBox } from 'react-native';
@@ -33,27 +35,58 @@ function LoggedInTabScreens() {
 }
 
 function App() {
-  const accessToken = false;
+  const [accessToken, setAccessToken] = useState('');
+  const [username, setUsername] = useState('');
+  const [playerId, setPlayerId] = useState('');
+  const context = {
+    accessToken,
+    setAccessToken,
+    username,
+    setUsername,
+    playerId,
+    setPlayerId
+  };
+
+  useEffect(() => {
+    const persistAuthState = async () => {
+      if (!accessToken) {
+        const storageToken = await getTokenFromStorage();
+
+        if (storageToken) {
+          const { sub, playerId } = decodeJwt(storageToken);
+
+          setAccessToken(storageToken);
+          setUsername(sub);
+          setPlayerId(playerId);
+        }
+      }
+    };
+
+    persistAuthState();
+  }, [accessToken]);
 
   return (
-    <ApolloProvider client={client}>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false
-          }}
-        >
-          {accessToken ? (
-            <Stack.Screen name="LoggedInScreens" component={LoggedInTabScreens} />
-          ) : (
-            <>
-              {/* <Stack.Screen name="LOGIN" component={LogInScreen} /> */}
-              <Stack.Screen name="SIGNUP" component={SignUpScreen} />
-            </>
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </ApolloProvider>
+    <AppContext.Provider value={context}>
+      <ApolloProvider client={client}>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false
+            }}
+          >
+            {accessToken ? (
+              <Stack.Screen name="LoggedInScreens" component={LoggedInTabScreens} />
+            ) : (
+              <>
+                <Stack.Screen name="SIGNUP" component={SignUpScreen} />
+                <Stack.Screen name="LOGIN" component={LogInScreen} />
+
+              </>
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ApolloProvider>
+    </AppContext.Provider>
   );
 }
 

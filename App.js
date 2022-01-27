@@ -33,7 +33,7 @@ function LoggedInTabScreens() {
 }
 
 function App() {
-  const accessToken = true;
+  const accessToken = false;
 
   return (
     <ApolloProvider client={client}>
@@ -47,7 +47,7 @@ function App() {
             <Stack.Screen name="LoggedInScreens" component={LoggedInTabScreens} />
           ) : (
             <>
-              <Stack.Screen name="LOGIN" component={LogInScreen} />
+              {/* <Stack.Screen name="LOGIN" component={LogInScreen} /> */}
               <Stack.Screen name="SIGNUP" component={SignUpScreen} />
             </>
           )}

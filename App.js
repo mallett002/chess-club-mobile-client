@@ -78,9 +78,8 @@ function App() {
               <Stack.Screen name="LoggedInScreens" component={LoggedInTabScreens} />
             ) : (
               <>
-                <Stack.Screen name="SIGNUP" component={SignUpScreen} />
                 <Stack.Screen name="LOGIN" component={LogInScreen} />
-
+                <Stack.Screen name="SIGNUP" component={SignUpScreen} />
               </>
             )}
           </Stack.Navigator>

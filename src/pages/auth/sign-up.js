@@ -8,7 +8,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useNavigation } from '@react-navigation/native';
 
 import { useAuthentication } from '../../utils/authentication-service';
-import colors from '../../constants/colors';
+import colors, { RUSSIAN } from '../../constants/colors';
 
 const { height } = Dimensions.get('window');
 
@@ -47,7 +47,7 @@ const SignUp = () => {
     return (
       <View style={styles.loader}>
         <ActivityIndicator
-          color={'red'}
+          color={RUSSIAN.ORANGE}
           size={'large'}
         />
       </View>
@@ -156,7 +156,7 @@ const SignUp = () => {
 
 const getSubmitButtonStyles = (touched, errors, isSubmitting) => {
   const buttonStyles = {
-    backgroundColor: colors.PINK,
+    backgroundColor: RUSSIAN.ORANGE,
     height: 40,
     borderRadius: 8,
     alignItems: 'center',
@@ -166,7 +166,7 @@ const getSubmitButtonStyles = (touched, errors, isSubmitting) => {
   };
 
   if (isSubmitting || !Object.keys(touched).length || Object.keys(errors).length) {
-    buttonStyles.backgroundColor = 'gray';
+    buttonStyles.backgroundColor = RUSSIAN.DARK_GRAY;
   }
 
   return buttonStyles;
@@ -176,7 +176,7 @@ const getInputStyles = (error, touched) => {
   const style = { ...styles.input };
 
   if (touched && error) {
-    style.borderBottomColor = 'red';
+    style.borderBottomColor = RUSSIAN.ORANGE;
   }
 
   return style;
@@ -185,7 +185,7 @@ const getInputStyles = (error, touched) => {
 const styles = StyleSheet.create({
   signUpContainer: {
     alignItems: 'center',
-    backgroundColor: colors.CHARCOAL,
+    backgroundColor: RUSSIAN.DARK,
     height: '100%'
   },
   loader: {
@@ -197,13 +197,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    color: colors.PINK,
+    color: RUSSIAN.ORANGE,
     fontWeight: '500',
     marginBottom: 10
   },
   subtitle: {
     fontSize: 16,
-    color: colors.GRAY,
+    color: RUSSIAN.GRAY,
     marginBottom: 28
   },
   formContainer: {
@@ -214,19 +214,19 @@ const styles = StyleSheet.create({
     minHeight: 80
   },
   labelText: {
-    color: colors.GRAY
+    color: RUSSIAN.GRAY
   },
   input: {
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: colors.DARK_CHARCOAL,
+    borderColor: RUSSIAN.GRAY,
     width: '100%',
-    color: colors.GRAY,
+    color: RUSSIAN.GRAY,
     padding: Platform.OS === 'android' ? 10 : 16,
     marginTop: 4
   },
   inputError: {
-    color: colors.PINK
+    color: RUSSIAN.ORANGE
   },
   serverError: {
     height: 20,
@@ -237,12 +237,12 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   buttonText: {
-    color: 'white'
+    color: colors.WHITE
   },
   loginLinkContainer: {
     marginTop: 50
   },
-  linkText: {color: colors.PINK}
+  linkText: {color: RUSSIAN.ORANGE}
 });
 
 export default SignUp;

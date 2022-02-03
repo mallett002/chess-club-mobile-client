@@ -1,8 +1,8 @@
 import React from 'react';
-import {TouchableOpacity, Text, View, Platform, StyleSheet} from 'react-native';
+import { TouchableOpacity, Text, View, Platform, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
-import colors from '../../constants/colors';
+import { RUSSIAN } from '../../constants/colors';
 
 const getTabBarStyles = () => {
   const styles = {
@@ -10,8 +10,8 @@ const getTabBarStyles = () => {
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 70,
-    backgroundColor: colors.CHARCOAL,
-    borderTopColor: colors.DARK_CHARCOAL,
+    backgroundColor: RUSSIAN.DARK,
+    borderTopColor: RUSSIAN.GRAY,
     borderTopWidth: 1,
     paddingVertical: 20
   };
@@ -36,13 +36,11 @@ function getIconName(label) {
 
 const styles = StyleSheet.create({
   tabCard: {
-    borderRightColor: colors.DARK_CHARCOAL,
-    borderRightWidth: 1,
     alignItems: 'center',
     flex: 1
   }
-})
-  
+});
+
 export default function BottomTab({ state, descriptors, navigation }) {
   return (
     <View style={getTabBarStyles()}>
@@ -82,10 +80,10 @@ export default function BottomTab({ state, descriptors, navigation }) {
             key={route.name}
             style={styles.tabCard}
           >
-            <Text style={{ color: isFocused ? colors.PINK : colors.WHITE }}>
+            <Text style={{ color: isFocused ? RUSSIAN.GREEN : RUSSIAN.GRAY }}>
               {route.name}
             </Text>
-            <Icon name={iconName} size={28} color={isFocused ? colors.PINK : colors.WHITE} />
+            <Icon name={iconName} size={28} color={isFocused ? RUSSIAN.GREEN : RUSSIAN.GRAY} />
           </TouchableOpacity>
         );
       })}

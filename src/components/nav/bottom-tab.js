@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, Text, View, Platform, StyleSheet} from 'react-native';
+import { TouchableOpacity, Text, View, Platform, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
 import { RUSSIAN } from '../../constants/colors';
@@ -36,13 +36,11 @@ function getIconName(label) {
 
 const styles = StyleSheet.create({
   tabCard: {
-    borderRightColor: RUSSIAN.GRAY,
-    borderRightWidth: 1,
     alignItems: 'center',
     flex: 1
   }
-})
-  
+});
+
 export default function BottomTab({ state, descriptors, navigation }) {
   return (
     <View style={getTabBarStyles()}>

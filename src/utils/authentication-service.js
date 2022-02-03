@@ -5,7 +5,7 @@ import { persistTokenInStorage, decodeJwt } from './token-utils';
 
 export async function authenticateUser(token, setAccessToken, setUsername, setPlayerId) {
   await persistTokenInStorage(token);
-  const { sub, playerId } = decodeJwt(token);
+  const { sub, playerId } = await decodeJwt(token);
 
   setAccessToken(token);
   setUsername(sub);

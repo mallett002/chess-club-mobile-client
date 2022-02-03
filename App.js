@@ -53,7 +53,7 @@ function App() {
         const storageToken = await getTokenFromStorage();
 
         if (storageToken) {
-          const { sub, playerId } = decodeJwt(storageToken);
+          const { sub, playerId } = await decodeJwt(storageToken);
 
           setAccessToken(storageToken);
           setUsername(sub);

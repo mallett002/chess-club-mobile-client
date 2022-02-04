@@ -8,6 +8,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useNavigation } from '@react-navigation/native';
 
 import { useAuthentication } from '../../utils/authentication-service';
+import { RUSSIAN } from '../constants/colors';
 
 const { height } = Dimensions.get('window');
 
@@ -61,7 +62,7 @@ function InvitationForm({ setShowMakeRequest }) {
     return (
       <View style={styles.loader}>
         <ActivityIndicator
-          color={'red'}
+          color={RUSSIAN.ORANGE}
           size={'large'}
         />
       </View>
@@ -112,11 +113,11 @@ function InvitationForm({ setShowMakeRequest }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   width: 150,
-                  color: 'white'
+                  color: RUSSIAN.WHITE
                 }}
                 onPress={() => setShowMakeRequest(false)}
               >
-                <Text style={{ color: '#FFF' }}>{'Cancel'}</Text>
+                <Text style={{ color: RUSSIAN.WHITE }}>{'Cancel'}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 disabled={isSubmitting || !Object.keys(touched).length || Object.keys(errors).length}
@@ -126,7 +127,7 @@ function InvitationForm({ setShowMakeRequest }) {
               >
                 {
                   isSubmitting
-                    ? <ActivityIndicator color={'white'} />
+                    ? <ActivityIndicator color={RUSSIAN.WHITE} />
                     : <Text style={styles.buttonText}>{'Send Invitation'}</Text>
                 }
               </TouchableOpacity>
@@ -150,7 +151,7 @@ const getSubmitButtonStyles = (touched, errors, isSubmitting) => {
     alignItems: 'center',
     justifyContent: 'center',
     width: 150,
-    color: 'white'
+    color: RUSSIAN.WHITE
   };
 
   if (isSubmitting || !Object.keys(touched).length || Object.keys(errors).length) {
@@ -164,7 +165,7 @@ const getInputStyles = (error, touched) => {
   const style = { ...styles.input };
 
   if (touched && error) {
-    style.borderBottomColor = 'red';
+    style.borderBottomColor = RUSSIAN.ORANGE;
   }
 
   return style;
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    color: 'red', // unsure of colors and styles for now
+    color: RUSSIAN.ORANGE, // unsure of colors and styles for now
     fontWeight: '500',
     marginBottom: 10
   },
@@ -201,12 +202,12 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: '#e0e0e0',
+    borderColor: RUSSIAN.LIGHT_GRAY,
     width: '100%',
     padding: Platform.OS === 'android' ? 10 : 16
   },
   inputError: {
-    color: 'red'
+    color: RUSSIAN.ORANGE
   },
   serverError: {
     height: 20,
@@ -217,12 +218,12 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   buttonText: {
-    color: 'white'
+    color: RUSSIAN.WHITE
   },
   loginLinkContainer: {
     marginTop: 50
   },
-  linkText: { color: 'red' }
+  linkText: { color: RUSSIAN.ORANGE }
 });
 
 export default InvitationForm;

@@ -50,7 +50,7 @@ export default function InvitationsScreen() {
   }
 
   const { getInvitations: { invitations: myRequests, inboundGameRequests } } = data;
-  const fakeInvitations = [{ invitor: 'jeffreyDSerb' }, { invitor: 'bmallYourPal' }, { invitor: 'dickTracy' }];
+  const fakeInvitations = [{ invitor: 'jeffreyDSerb23Blaieladkafhdiaal' }, { invitor: 'bmallYourPal' }, { invitor: 'dickTracy' }];
   const fakeRequests = [{ invitee: 'tStark' }, { invitee: 'snoozYaLoose' }, { invitee: 'tomHafferty' }];
 
   return (
@@ -64,23 +64,30 @@ export default function InvitationsScreen() {
           {
             fakeInvitations.length
               ? fakeInvitations.map((request, i) => <View key={i} style={styles.invitationItem}>
-                <Text>{request.invitor}</Text>
-                <TouchableOpacity style={{
-                  backgroundColor: RUSSIAN.GREEN,
-                  borderRadius: 2,
-                  paddingVertical: 2,
-                  paddingHorizontal: 8
+                <Text style={{flex: 1}}>{request.invitor}</Text>
+                <View style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  flex: 1
                 }}>
-                  <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 2 }}>{'Accept'}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                  backgroundColor: RUSSIAN.ORANGE,
-                  borderRadius: 2,
-                  paddingVertical: 2,
-                  paddingHorizontal: 8
-                }}>
-                  <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 2 }}>{'Decline'}</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity style={{
+                    backgroundColor: RUSSIAN.GREEN,
+                    borderRadius: 2,
+                    paddingVertical: 4,
+                    paddingHorizontal: 12,
+                  }}>
+                    <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 2 }}>{'Accept'}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={{
+                    backgroundColor: RUSSIAN.ORANGE,
+                    borderRadius: 2,
+                    paddingVertical: 4,
+                    paddingHorizontal: 12,
+                    marginLeft: 18
+                  }}>
+                    <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 2 }}>{'Decline'}</Text>
+                  </TouchableOpacity>
+                </View>
               </View>)
               : <Text style={styles.noDataText}>{"You currently don't have any requests to play."}</Text>
           }
@@ -126,7 +133,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16
   },
   section: {
-    marginBottom: 16
+    marginBottom: 32,
+    marginTop: 12
   },
   sectionContent: {
     paddingLeft: 8
@@ -150,7 +158,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '70%',
+    width: '100%',
     marginVertical: 4
   },
   inviteButtonStyles: {

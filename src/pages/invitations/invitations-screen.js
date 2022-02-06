@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql, useQuery, useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import { TextInput, Text, View, ActivityIndicator, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -6,7 +6,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import InvitationForm from '../../components/invitation-form';
-import colors, { RUSSIAN } from '../../constants/colors';
+import { RUSSIAN } from '../../constants/colors';
 
 const INVITATIONS_QUERY = gql`
   query GetInvitations {
@@ -23,17 +23,61 @@ const INVITATIONS_QUERY = gql`
   }
 `;
 
-export default function InvitationsScreen() {
-  const { data, error, loading, refetch } = useQuery(INVITATIONS_QUERY);
-  const [showMakeRequest, setShowMakeRequest] = useState(false);
+const CREATE_INVITATION_MUTATION = gql`
+  mutation createInvitation($inviteeUsername: String!) {
+  createInvitation(inviteeUsername: $inviteeUsername) {
+    invitationId
+    invitor {
+      playerId
+      username
+    }
+    invitee {
+      playerId
+      username
+    }
+  }
+}
+`;
 
-  if (error || !loading && !data || !loading && !data.getInvitations) {
+export default function InvitationsScreen() {
+  const [invitationError, setInviteError] = useState(null);
+  const [showMakeRequest, setShowMakeRequest] = useState(false);
+  const { data: getInvitationsData, error: getInviteError, loading: getInviteLoading, refetch } = useQuery(INVITATIONS_QUERY, {
+    fetchPolicy: 'cache-and-network'
+  });
+  const [mutate, { loading: createInviteLoading }] = useMutation(CREATE_INVITATION_MUTATION, {
+    onError: (err) => {
+      if (/player with username [^\s\\]+ not found/.test(err)) {
+        setInviteError('Invitation failed. Make sure username is correct.');
+      } else if (/player attempting to invite self/.test(err)) {
+        setInviteError("You can't invite yourself.");
+      } else if (/Existing invitation with [^\s\\]+/.test(err)) {
+        setInviteError("You have an existing invitation with that player.");
+      } else {
+        setInviteError('Something went wrong. Please try again.');
+      }
+    },
+    onCompleted: () => {
+      console.log('success!');
+      setInviteError(null);
+      setShowMakeRequest(false);
+      refetch();
+    }
+  });
+
+  const createInvitation = (username) => mutate({
+    variables: {
+      inviteeUsername: username
+    }
+  });
+
+  if (getInviteError || !getInviteLoading && !getInvitationsData || !getInviteLoading && !getInvitationsData.getInvitations) {
     return (
       <View><Text>{'Something went wrong.'}</Text></View>
     );
   }
 
-  if (loading) {
+  if (getInviteLoading) {
     return (
       <View style={{
         flexDirection: 'row',
@@ -49,9 +93,9 @@ export default function InvitationsScreen() {
     );
   }
 
-  const { getInvitations: { invitations: myRequests, inboundGameRequests } } = data;
-  const fakeInvitations = [{ invitor: 'jeffreyDSerb23Blaieladkafhdiaal' }, { invitor: 'bmallYourPal' }, { invitor: 'dickTracy' }];
-  const fakeRequests = [{ invitee: 'tStark' }, { invitee: 'snoozYaLoose' }, { invitee: 'tomHafferty' }];
+  const { getInvitations: { invitations: myRequests, inboundGameRequests } } = getInvitationsData;
+  // const fakeInvitations = [{ invitor: 'jeffreyDSerb23Blaieladkafhdiaal' }, { invitor: 'bmallYourPal' }, { invitor: 'dickTracy' }];
+  // const fakeRequests = [{ invitee: 'tStark' }, { invitee: 'snoozYaLoose' }, { invitee: 'tomHafferty' }];
 
   return (
     <KeyboardAwareScrollView
@@ -62,9 +106,9 @@ export default function InvitationsScreen() {
         <Text style={styles.sectionTitle}>{'My Invitations'}</Text>
         <View style={styles.sectionContent}>
           {
-            fakeInvitations.length
-              ? fakeInvitations.map((request, i) => <View key={i} style={styles.invitationItem}>
-                <Text style={{flex: 1}}>{request.invitor}</Text>
+            inboundGameRequests.length
+              ? inboundGameRequests.map((request, i) => <View key={i} style={styles.invitationItem}>
+                <Text style={{ flex: 1 }}>{request.invitor}</Text>
                 <View style={{
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
@@ -103,21 +147,35 @@ export default function InvitationsScreen() {
             <Feather
               name={'plus-circle'}
               size={28}
-              color={showMakeRequest ? RUSSIAN.DARK_GRAY : RUSSIAN.GREEN}
+              color={showMakeRequest ? RUSSIAN.GRAY : RUSSIAN.GREEN}
             />
           </TouchableOpacity>
         </View>
         {
           showMakeRequest
-            ? <InvitationForm setShowMakeRequest={setShowMakeRequest} />
+            ? <InvitationForm
+                createInvitation={createInvitation}
+                invitationError={invitationError}
+                loading={createInviteLoading}
+                setShowMakeRequest={setShowMakeRequest}
+            />
             : null
         }
         <View style={styles.sectionContent}>
           {
-            fakeRequests.length
-              ? fakeRequests.map((request, i) => <View key={i} style={styles.invitationItem}>
+            myRequests.length
+              ? myRequests.map((request, i) => <View key={i} style={styles.invitationItem}>
                 <Text>{request.invitee}</Text>
-                <Text style={{ color: colors.LIGHT_CELL, fontSize: 12 }}>{'Pending'}</Text>
+                <Text>{'Pending'}</Text>
+                <TouchableOpacity style={{
+                  backgroundColor: RUSSIAN.ORANGE,
+                  borderRadius: 2,
+                  paddingVertical: 4,
+                  paddingHorizontal: 12,
+                  marginLeft: 18
+                }}>
+                  <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 2 }}>{'Revoke'}</Text>
+                </TouchableOpacity>
               </View>)
               : <Text style={styles.noDataText}>{'You currently have not invited anyone.'}</Text>
           }

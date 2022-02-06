@@ -1,13 +1,8 @@
-import React, { useState } from 'react';
-import { gql, useMutation } from '@apollo/client';
+import React from 'react';
 import { View, Text, StyleSheet, TextInput, ActivityIndicator, Dimensions, Platform } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useNavigation } from '@react-navigation/native';
-
-import { useAuthentication } from '../../utils/authentication-service';
 import { RUSSIAN } from '../constants/colors';
 
 const { height } = Dimensions.get('window');
@@ -20,44 +15,7 @@ const createInvitationSchema = Yup.object().shape({
     .required('Required')
 });
 
-const CREATE_INVITATION_MUTATION = gql`
-  mutation createInvitation($inviteeUsername: String!) {
-  createInvitation(inviteeUsername: $inviteeUsername) {
-    invitationId
-    invitor {
-      playerId
-      username
-    }
-    invitee {
-      playerId
-      username
-    }
-  }
-}
-`;
-
-function InvitationForm({ setShowMakeRequest }) {
-  const [mutate, { data, loading, error }] = useMutation(CREATE_INVITATION_MUTATION, {
-    onError: (err) => {
-      if (/player with username [^\s\\]+ not found/.test(err)) {
-        setInviteError('Invitation failed. Make sure username is correct.');
-      } else if (/player attempting to invite self/.test(err)) {
-        setInviteError("You can't invite yourself.");
-      } else if (/Existing invitation with [^\s\\]+/.test(err)) {
-        setInviteError("You have an existing invitation with that player.");
-      } else {
-        setInviteError('Something went wrong. Please try again.');
-      }
-    },
-    onSuccess: () => {
-      // this doesn't seem to get called.. Trying to await the mutate below
-      console.log('success!');
-      setInviteError(null);
-      setShowMakeRequest(false);
-    }
-  });
-  const [invitationError, setInviteError] = useState(null);
-
+function InvitationForm({ createInvitation, setShowMakeRequest, invitationError, loading }) {
   if (loading) {
     return (
       <View style={styles.loader}>
@@ -80,11 +38,7 @@ function InvitationForm({ setShowMakeRequest }) {
         validateOnBlur
         validationSchema={createInvitationSchema}
         onSubmit={({ username }, actions) => {
-          mutate({
-            variables: {
-              inviteeUsername: username
-            }
-          });
+          createInvitation(username);
 
           actions.setSubmitting(false);
         }}
@@ -107,7 +61,7 @@ function InvitationForm({ setShowMakeRequest }) {
             }}>
               <TouchableOpacity
                 style={{
-                  backgroundColor: "red",
+                  backgroundColor: RUSSIAN.ORANGE,
                   height: 40,
                   borderRadius: 8,
                   alignItems: 'center',

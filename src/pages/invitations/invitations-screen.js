@@ -1,4 +1,4 @@
-import { gql, useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import { TextInput, Text, View, ActivityIndicator, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -7,37 +7,11 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import InvitationForm from '../../components/invitation-form';
 import { RUSSIAN } from '../../constants/colors';
-
-const INVITATIONS_QUERY = gql`
-  query GetInvitations {
-    getInvitations {
-      invitations {
-        invitationId
-        invitee
-      }
-      inboundGameRequests {
-        invitationId
-        invitor
-      }
-    }
-  }
-`;
-
-const CREATE_INVITATION_MUTATION = gql`
-  mutation createInvitation($inviteeUsername: String!) {
-  createInvitation(inviteeUsername: $inviteeUsername) {
-    invitationId
-    invitor {
-      playerId
-      username
-    }
-    invitee {
-      playerId
-      username
-    }
-  }
-}
-`;
+import {
+  CREATE_INVITATION_MUTATION,
+  CREATE_GAME_MUTATION,
+  INVITATIONS_QUERY,
+} from '../../constants/queries';
 
 export default function InvitationsScreen() {
   const [invitationError, setInviteError] = useState(null);
@@ -70,6 +44,21 @@ export default function InvitationsScreen() {
       inviteeUsername: username
     }
   });
+  const [createGameMutate, {loading: createGameLoading}] = useMutation(CREATE_GAME_MUTATION, {
+    onError: (err) => {
+      console.log('something went wrong creating the game.');
+    },
+    onCompleted: () => {
+      console.log('successfully created the game!');
+    }
+  });
+
+  const createGame = (invitationId, inviteeColor) => createGameMutate({
+    variables: {
+      invitationId,
+      inviteeColor
+    }
+  });
 
   if (getInviteError || !getInviteLoading && !getInvitationsData || !getInviteLoading && !getInvitationsData.getInvitations) {
     return (
@@ -94,8 +83,6 @@ export default function InvitationsScreen() {
   }
 
   const { getInvitations: { invitations: myRequests, inboundGameRequests } } = getInvitationsData;
-  // const fakeInvitations = [{ invitor: 'jeffreyDSerb23Blaieladkafhdiaal' }, { invitor: 'bmallYourPal' }, { invitor: 'dickTracy' }];
-  // const fakeRequests = [{ invitee: 'tStark' }, { invitee: 'snoozYaLoose' }, { invitee: 'tomHafferty' }];
 
   return (
     <KeyboardAwareScrollView
@@ -114,12 +101,17 @@ export default function InvitationsScreen() {
                   justifyContent: 'flex-end',
                   flex: 1
                 }}>
-                  <TouchableOpacity style={{
-                    backgroundColor: RUSSIAN.GREEN,
-                    borderRadius: 2,
-                    paddingVertical: 4,
-                    paddingHorizontal: 12,
-                  }}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: RUSSIAN.GREEN,
+                      borderRadius: 2,
+                      paddingVertical: 4,
+                      paddingHorizontal: 12,
+                    }}
+                    onPress={() => {
+                      createGame(request.invitationId, 'w');
+                    }}
+                  >
                     <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 2 }}>{'Accept'}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={{

@@ -25,7 +25,9 @@ const Stack = createStackNavigator();
 
 function LoggedInTabScreens() {
   return (
-    <Tab.Navigator tabBar={props => <BottomTab {...props} />}
+    <Tab.Navigator 
+      screenOptions={{ headerShown: false }}
+      tabBar={props => <BottomTab {...props} />}
     >
       <Tab.Screen name='Games' component={GamesScreen} />
       <Tab.Screen name='Profile' component={ProfileScreen} />

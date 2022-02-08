@@ -16,16 +16,16 @@ const createInvitationSchema = Yup.object().shape({
 });
 
 function InvitationForm({ createInvitation, setShowMakeRequest, invitationError, loading }) {
-  if (loading) {
-    return (
-      <View style={styles.loader}>
-        <ActivityIndicator
-          color={RUSSIAN.ORANGE}
-          size={'large'}
-        />
-      </View>
-    );
-  }
+    if (loading) {
+      return (
+        <View style={styles.loader}>
+          <ActivityIndicator
+            color={RUSSIAN.ORANGE}
+            size={'large'}
+          />
+        </View>
+      );
+    }
 
   return (
     <View style={{ marginBottom: 20 }}>

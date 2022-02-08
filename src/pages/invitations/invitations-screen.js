@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from '@apollo/client';
 import React, { useState } from 'react';
-import { TextInput, Text, View, ActivityIndicator, StyleSheet } from 'react-native';
+import { Text, View, ActivityIndicator, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Feather from 'react-native-vector-icons/Feather';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -12,6 +12,7 @@ import {
   CREATE_GAME_MUTATION,
   INVITATIONS_QUERY,
 } from '../../constants/queries';
+import { getInviteCreationError } from '../../utils/errors';
 
 export default function InvitationsScreen() {
   const [invitationError, setInviteError] = useState(null);
@@ -20,16 +21,8 @@ export default function InvitationsScreen() {
     fetchPolicy: 'cache-and-network'
   });
   const [mutate, { loading: createInviteLoading }] = useMutation(CREATE_INVITATION_MUTATION, {
-    onError: (err) => {
-      if (/player with username [^\s\\]+ not found/.test(err)) {
-        setInviteError('Invitation failed. Make sure username is correct.');
-      } else if (/player attempting to invite self/.test(err)) {
-        setInviteError("You can't invite yourself.");
-      } else if (/Existing invitation with [^\s\\]+/.test(err)) {
-        setInviteError("You have an existing invitation with that player.");
-      } else {
-        setInviteError('Something went wrong. Please try again.');
-      }
+    onError: (error) => {
+      setInviteError(getInviteCreationError(error));
     },
     onCompleted: () => {
       console.log('success!');
@@ -38,21 +31,12 @@ export default function InvitationsScreen() {
       refetch();
     }
   });
-
   const createInvitation = (username) => mutate({
     variables: {
       inviteeUsername: username
     }
   });
-  const [createGameMutate, {loading: createGameLoading}] = useMutation(CREATE_GAME_MUTATION, {
-    onError: (err) => {
-      console.log('something went wrong creating the game.');
-    },
-    onCompleted: () => {
-      console.log('successfully created the game!');
-    }
-  });
-
+  const [createGameMutate] = useMutation(CREATE_GAME_MUTATION);
   const createGame = (invitationId, inviteeColor) => createGameMutate({
     variables: {
       invitationId,
@@ -62,7 +46,9 @@ export default function InvitationsScreen() {
 
   if (getInviteError || !getInviteLoading && !getInvitationsData || !getInviteLoading && !getInvitationsData.getInvitations) {
     return (
-      <View><Text>{'Something went wrong.'}</Text></View>
+      <View style={{ marginTop: 20, marginHorizontal: 5 }}>
+        <Text>{'There was an error fetching invitations.'}</Text>
+      </View>
     );
   }
 
@@ -82,7 +68,21 @@ export default function InvitationsScreen() {
     );
   }
 
-  const { getInvitations: { invitations: myRequests, inboundGameRequests } } = getInvitationsData;
+  const { getInvitations: { invitations: myRequests } } = getInvitationsData;
+  const inboundGameRequests = [
+    {
+      invitor: 'sam',
+      invitationId: 'some-id'
+    },
+    {
+      invitor: 'billy',
+      invitationId: 'some-id'
+    },
+    {
+      invitor: 'bobby',
+      invitationId: 'some-id'
+    }
+  ]
 
   return (
     <KeyboardAwareScrollView
@@ -105,23 +105,23 @@ export default function InvitationsScreen() {
                     style={{
                       backgroundColor: RUSSIAN.GREEN,
                       borderRadius: 2,
-                      paddingVertical: 4,
-                      paddingHorizontal: 12,
+                      paddingVertical: 8,
+                      paddingHorizontal: 16,
                     }}
                     onPress={() => {
                       createGame(request.invitationId, 'w');
                     }}
                   >
-                    <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 2 }}>{'Accept'}</Text>
+                    <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 4 }}>{'Accept'}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={{
                     backgroundColor: RUSSIAN.ORANGE,
                     borderRadius: 2,
-                    paddingVertical: 4,
-                    paddingHorizontal: 12,
+                    paddingVertical: 8,
+                    paddingHorizontal: 16,
                     marginLeft: 18
                   }}>
-                    <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 2 }}>{'Decline'}</Text>
+                    <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 4 }}>{'Decline'}</Text>
                   </TouchableOpacity>
                 </View>
               </View>)
@@ -146,10 +146,10 @@ export default function InvitationsScreen() {
         {
           showMakeRequest
             ? <InvitationForm
-                createInvitation={createInvitation}
-                invitationError={invitationError}
-                loading={createInviteLoading}
-                setShowMakeRequest={setShowMakeRequest}
+              createInvitation={createInvitation}
+              invitationError={invitationError}
+              loading={createInviteLoading}
+              setShowMakeRequest={setShowMakeRequest}
             />
             : null
         }
@@ -162,11 +162,11 @@ export default function InvitationsScreen() {
                 <TouchableOpacity style={{
                   backgroundColor: RUSSIAN.ORANGE,
                   borderRadius: 2,
-                  paddingVertical: 4,
-                  paddingHorizontal: 12,
+                  paddingVertical: 8,
+                  paddingHorizontal: 16,
                   marginLeft: 18
                 }}>
-                  <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 2 }}>{'Revoke'}</Text>
+                  <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 4 }}>{'Revoke'}</Text>
                 </TouchableOpacity>
               </View>)
               : <Text style={styles.noDataText}>{'You currently have not invited anyone.'}</Text>
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    marginVertical: 4
+    marginVertical: 12
   },
   inviteButtonStyles: {
     width: 80,

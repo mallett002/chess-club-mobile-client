@@ -28,8 +28,8 @@ function InvitationForm({ createInvitation, setShowMakeRequest, invitationError,
     }
 
   return (
-    <View style={{ marginBottom: 20 }}>
-      <Text style={{ marginVertical: 20 }}>{'Send Invitation to Play'}</Text>
+    <View style={styles.wrapper}>
+      <Text style={styles.title}>{'Send Invitation to Play'}</Text>
       <Formik
         initialValues={{
           username: '',
@@ -48,6 +48,7 @@ function InvitationForm({ createInvitation, setShowMakeRequest, invitationError,
             <View style={styles.inputContainer}>
               <TextInput
                 placeholder={'Opponent username'}
+                placeholderTextColor={RUSSIAN.GRAY}
                 style={getInputStyles(errors.username, touched.username)}
                 onChangeText={handleChange('username')}
                 onBlur={handleBlur('username')}
@@ -126,8 +127,9 @@ const getInputStyles = (error, touched) => {
 };
 
 const styles = StyleSheet.create({
-  signUpContainer: {
-    alignItems: 'center'
+  wrapper: {
+    paddingHorizontal: 8  ,
+    marginBottom: 16
   },
   loader: {
     marginTop: height * 0.15
@@ -137,10 +139,8 @@ const styles = StyleSheet.create({
     marginTop: height * 0.15
   },
   title: {
-    fontSize: 32,
-    color: RUSSIAN.ORANGE, // unsure of colors and styles for now
-    fontWeight: '500',
-    marginBottom: 10
+    marginVertical: 12,
+    color: RUSSIAN.LIGHT_GRAY
   },
   subtitle: {
     fontSize: 16,
@@ -148,15 +148,16 @@ const styles = StyleSheet.create({
     marginBottom: 28
   },
   formContainer: {
-    width: '90%'
+    width: '100%'
   },
   inputContainer: {
-    marginBottom: 8
+    marginBottom: 24
   },
   input: {
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: RUSSIAN.LIGHT_GRAY,
+    borderColor: RUSSIAN.GRAY,
+    color: RUSSIAN.LIGHT_GRAY,
     width: '100%',
     padding: Platform.OS === 'android' ? 10 : 16
   },

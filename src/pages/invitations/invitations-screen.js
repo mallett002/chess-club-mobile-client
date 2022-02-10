@@ -89,13 +89,14 @@ export default function InvitationsScreen() {
       scrollEnabled={false}
       style={styles.wrapper}
     >
+      <Text style={styles.title}>{'Invitations'}</Text>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{'My Invitations'}</Text>
         <View style={styles.sectionContent}>
           {
             inboundGameRequests.length
               ? inboundGameRequests.map((request, i) => <View key={i} style={styles.invitationItem}>
-                <Text style={{ flex: 1 }}>{request.invitor}</Text>
+                <Text style={{ flex: 1, color: RUSSIAN.LIGHT_GRAY }}>{request.invitor}</Text>
                 <View style={{
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
@@ -169,7 +170,7 @@ export default function InvitationsScreen() {
                   <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 4 }}>{'Revoke'}</Text>
                 </TouchableOpacity>
               </View>)
-              : <Text style={styles.noDataText}>{'You currently have not invited anyone.'}</Text>
+              : <Text style={styles.noDataText}>{'You have no pending invitations.'}</Text>
           }
         </View>
       </View>
@@ -179,8 +180,14 @@ export default function InvitationsScreen() {
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginTop: 16,
+    backgroundColor: RUSSIAN.DARK,
     paddingHorizontal: 16
+  },
+  title: {
+    color: RUSSIAN.GREEN,
+    fontSize: 32,
+    marginBottom: 16,
+    marginTop: 24
   },
   section: {
     marginBottom: 32,
@@ -196,13 +203,15 @@ const styles = StyleSheet.create({
     paddingRight: 8
   },
   sectionTitle: {
+    color: RUSSIAN.LIGHT_GRAY,
     fontSize: 18,
     fontWeight: '600'
   },
   noDataText: {
     fontSize: 14,
     fontWeight: '100',
-    color: RUSSIAN.DARK_GRAY
+    color: RUSSIAN.LIGHT_GRAY,
+    marginTop: 12
   },
   invitationItem: {
     flexDirection: 'row',

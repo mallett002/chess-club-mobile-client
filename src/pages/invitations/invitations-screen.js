@@ -173,16 +173,20 @@ export default function InvitationsScreen() {
         <View style={styles.section}>
           <View style={styles.requestsHeader}>
             <Text style={styles.sectionTitle}>{'My Sent Invitations'}</Text>
-            <TouchableOpacity
-              onPress={() => setShowMakeRequest(true)}
-              disabled={showMakeRequest}
-            >
-              <Feather
-                name={'arrow-right-circle'}
-                size={28}
-                color={showMakeRequest ? RUSSIAN.GRAY : RUSSIAN.GREEN}
-              />
-            </TouchableOpacity>
+            <View style={[styles.buttonGroup, { alignItems: 'center' }]}>
+              <Text style={{ color: RUSSIAN.GREEN }}>{'Create'}</Text>
+              <TouchableOpacity
+                style={{ marginLeft: 8 }}
+                onPress={() => setShowMakeRequest(true)}
+                disabled={showMakeRequest}
+              >
+                <Feather
+                  name={'arrow-right-circle'}
+                  size={28}
+                  color={showMakeRequest ? RUSSIAN.GRAY : RUSSIAN.GREEN}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.sectionContent}>
             {
@@ -219,7 +223,8 @@ const styles = StyleSheet.create({
     marginTop: 12
   },
   sectionContent: {
-    paddingHorizontal: 8
+    paddingHorizontal: 8,
+    marginTop: 12
   },
   person: {
     flex: 1,
@@ -243,10 +248,12 @@ const styles = StyleSheet.create({
     marginTop: 12
   },
   invitationItem: {
+    borderTopColor: RUSSIAN.DARK_GRAY,
+    borderTopWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginVertical: 12
+    paddingVertical: 8
   },
   buttonGroup: {
     flexDirection: 'row',

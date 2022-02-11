@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TextInput, ActivityIndicator, Dimensions, Platf
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Feather from 'react-native-vector-icons/Feather';
+
 import { RUSSIAN } from '../constants/colors';
 
 const { height } = Dimensions.get('window');
@@ -15,21 +17,37 @@ const createInvitationSchema = Yup.object().shape({
     .required('Required')
 });
 
-function InvitationForm({ createInvitation, setShowMakeRequest, invitationError, loading }) {
-    if (loading) {
-      return (
-        <View style={styles.loader}>
-          <ActivityIndicator
-            color={RUSSIAN.ORANGE}
-            size={'large'}
-          />
-        </View>
-      );
-    }
+function InvitationForm(props) {
+  console.log({ props });
+  if (props.loading) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator
+          color={RUSSIAN.ORANGE}
+          size={'large'}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.title}>{'Send Invitation to Play'}</Text>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={{ marginRight: 8 }}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Feather
+            name={'arrow-left-circle'}
+            size={28}
+            color={RUSSIAN.GRAY}
+          />
+        </TouchableOpacity>
+        <Text style={styles.title}>{'Create Invitation'}</Text>
+      </View>
+      {/* <View style={{marginBottom: 32, alignItems: 'center'}}>
+        <Text style={{ color: RUSSIAN.LIGHT_GRAY, fontSize: 16 }}>{'Send an invitation to play.'}</Text>
+      </View> */}
       <Formik
         initialValues={{
           username: '',
@@ -38,7 +56,7 @@ function InvitationForm({ createInvitation, setShowMakeRequest, invitationError,
         validateOnBlur
         validationSchema={createInvitationSchema}
         onSubmit={({ username }, actions) => {
-          createInvitation(username);
+          props.createInvitation(username);
 
           actions.setSubmitting(false);
         }}
@@ -70,7 +88,7 @@ function InvitationForm({ createInvitation, setShowMakeRequest, invitationError,
                   width: 150,
                   color: RUSSIAN.WHITE
                 }}
-                onPress={() => setShowMakeRequest(false)}
+                onPress={() => props.setShowMakeRequest(false)}
               >
                 <Text style={{ color: RUSSIAN.WHITE }}>{'Cancel'}</Text>
               </TouchableOpacity>
@@ -88,7 +106,7 @@ function InvitationForm({ createInvitation, setShowMakeRequest, invitationError,
               </TouchableOpacity>
             </View>
             {
-              invitationError ? <Text style={styles.inputError}>{invitationError}</Text> : null
+              props.invitationError ? <Text style={styles.inputError}>{props.invitationError}</Text> : null
             }
           </View>
         )}
@@ -128,19 +146,23 @@ const getInputStyles = (error, touched) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    paddingHorizontal: 8  ,
-    marginBottom: 16
+    paddingHorizontal: 8,
+    backgroundColor: RUSSIAN.DARK,
+    marginBottom: 16,
+    height: '100%'
   },
   loader: {
     marginTop: height * 0.15
   },
   header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: height * 0.15
+    marginTop: 24,
+    marginBottom: 16
   },
   title: {
-    marginVertical: 12,
-    color: RUSSIAN.LIGHT_GRAY
+    color: RUSSIAN.GREEN,
+    fontSize: 32
   },
   subtitle: {
     fontSize: 16,

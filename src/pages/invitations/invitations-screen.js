@@ -15,7 +15,6 @@ import {
 import { getInviteCreationError } from '../../utils/errors';
 
 export default function InvitationsScreen(props) {
-  console.log('props.navigation.navigate exists!: ', props.navigation.navigate);
   // const [invitationError, setInviteError] = useState(null);
   // const [showMakeRequest, setShowMakeRequest] = useState(false);
   const { data: getInvitationsData, error: getInviteError, loading: getInviteLoading, refetch } = useQuery(INVITATIONS_QUERY, {

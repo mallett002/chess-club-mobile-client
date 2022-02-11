@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from '@apollo/client';
 import React, { useState } from 'react';
-import { Text, View, ActivityIndicator, StyleSheet } from 'react-native';
+import { SafeAreaView, Text, View, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Feather from 'react-native-vector-icons/Feather';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -57,12 +57,22 @@ export default function InvitationsScreen() {
       <View style={{
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: RUSSIAN.DARK,
+        height: '100%'
       }}>
-        <Text style={{ marginRight: 6 }}>{'Loading invitations...'}</Text>
+        <Text
+          style={{
+            marginRight: 16,
+            color: RUSSIAN.LIGHT_GRAY,
+            fontSize: 24
+          }}
+        >
+          {'Loading invitations'}
+        </Text>
         <ActivityIndicator
-          color={RUSSIAN.ORANGE}
-          size={'small'}
+          color={RUSSIAN.GREEN}
+          size={'large'}
         />
       </View>
     );
@@ -71,7 +81,7 @@ export default function InvitationsScreen() {
   const { getInvitations: { invitations: myRequests } } = getInvitationsData;
   const inboundGameRequests = [
     {
-      invitor: 'sam',
+      invitor: 'scotty2hotty211',
       invitationId: 'some-id'
     },
     {
@@ -81,100 +91,115 @@ export default function InvitationsScreen() {
     {
       invitor: 'bobby',
       invitationId: 'some-id'
+    },
+    {
+      invitor: 'bobby',
+      invitationId: 'some-id'
+    },
+    {
+      invitor: 'bobby',
+      invitationId: 'some-id'
+    },
+    {
+      invitor: 'bobby',
+      invitationId: 'some-id'
+    },
+    {
+      invitor: 'bobby',
+      invitationId: 'some-id'
     }
-  ]
+  ];
+
+  const myFakeRequests = [
+    {
+      invitee: 'scotty2hotty211',
+      invitationId: 'some-id'
+    },
+    {
+      invitee: 'billy',
+      invitationId: 'some-id'
+    },
+    {
+      invitee: 'bobby',
+      invitationId: 'some-id'
+    },
+    {
+      invitee: 'bobby',
+      invitationId: 'some-id'
+    },
+    {
+      invitee: 'bobby',
+      invitationId: 'some-id'
+    },
+    {
+      invitee: 'bobby',
+      invitationId: 'some-id'
+    },
+    {
+      invitee: 'bobby',
+      invitationId: 'some-id'
+    }
+  ];
 
   return (
-    <KeyboardAwareScrollView
-      scrollEnabled={false}
-      style={styles.wrapper}
-    >
-      <Text style={styles.title}>{'Invitations'}</Text>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{'My Invitations'}</Text>
-        <View style={styles.sectionContent}>
-          {
-            inboundGameRequests.length
-              ? inboundGameRequests.map((request, i) => <View key={i} style={styles.invitationItem}>
-                <Text style={{ flex: 1, color: RUSSIAN.LIGHT_GRAY }}>{request.invitor}</Text>
-                <View style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                  flex: 1
-                }}>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: RUSSIAN.GREEN,
-                      borderRadius: 2,
-                      paddingVertical: 8,
-                      paddingHorizontal: 16,
-                    }}
-                    onPress={() => {
-                      createGame(request.invitationId, 'w');
-                    }}
-                  >
-                    <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 4 }}>{'Accept'}</Text>
+    <SafeAreaView style={styles.wrapper}>
+      <ScrollView>
+        <Text style={styles.title}>{'Invitations'}</Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{'My Invitations'}</Text>
+          <View style={styles.sectionContent}>
+            {
+              inboundGameRequests.length
+                ? inboundGameRequests.map((request, i) => <View key={i} style={styles.invitationItem}>
+                  <Text style={styles.person}>{request.invitor}</Text>
+                  <View style={styles.buttonGroup}>
+                    <TouchableOpacity
+                      style={[styles.baseButton, { backgroundColor: RUSSIAN.GREEN }]}
+                      onPress={() => {
+                        createGame(request.invitationId, 'w');
+                      }}
+                    >
+                      <Text style={styles.buttonInnerds}>{'Accept'}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.baseButton, { backgroundColor: RUSSIAN.ORANGE, marginLeft: 18 }]}>
+                      <Text style={styles.buttonInnerds}>{'Decline'}</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>)
+                : <Text style={styles.noDataText}>{"You currently don't have any requests to play."}</Text>
+            }
+          </View>
+        </View>
+        <View style={styles.section}>
+          <View style={styles.requestsHeader}>
+            <Text style={styles.sectionTitle}>{'My Sent Invitations'}</Text>
+            <TouchableOpacity
+              onPress={() => setShowMakeRequest(true)}
+              disabled={showMakeRequest}
+            >
+              <Feather
+                name={'arrow-right-circle'}
+                size={28}
+                color={showMakeRequest ? RUSSIAN.GRAY : RUSSIAN.GREEN}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.sectionContent}>
+            {
+              myFakeRequests.length
+                ? myFakeRequests.map((request, i) => <View key={i} style={styles.invitationItem}>
+                  <Text style={styles.person}>{request.invitee}</Text>
+                  <Text style={{ color: RUSSIAN.LIGHT_SKIN }}>{'Pending'}</Text>
+                  <TouchableOpacity style={[styles.baseButton, { backgroundColor: RUSSIAN.ORANGE, marginLeft: 18 }]}>
+                    <Text style={styles.buttonInnerds}>{'Revoke'}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={{
-                    backgroundColor: RUSSIAN.ORANGE,
-                    borderRadius: 2,
-                    paddingVertical: 8,
-                    paddingHorizontal: 16,
-                    marginLeft: 18
-                  }}>
-                    <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 4 }}>{'Decline'}</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>)
-              : <Text style={styles.noDataText}>{"You currently don't have any requests to play."}</Text>
-          }
+                </View>)
+                : <Text style={styles.noDataText}>{'You have no pending invitations.'}</Text>
+            }
+          </View>
         </View>
-      </View>
-      <View style={styles.section}>
-        <View style={styles.requestsHeader}>
-          <Text style={styles.sectionTitle}>{'My Sent Invitations'}</Text>
-          <TouchableOpacity
-            onPress={() => setShowMakeRequest(true)}
-            disabled={showMakeRequest}
-          >
-            <Feather
-              name={'plus-circle'}
-              size={28}
-              color={showMakeRequest ? RUSSIAN.GRAY : RUSSIAN.GREEN}
-            />
-          </TouchableOpacity>
-        </View>
-        {
-          showMakeRequest
-            ? <InvitationForm
-              createInvitation={createInvitation}
-              invitationError={invitationError}
-              loading={createInviteLoading}
-              setShowMakeRequest={setShowMakeRequest}
-            />
-            : null
-        }
-        <View style={styles.sectionContent}>
-          {
-            myRequests.length
-              ? myRequests.map((request, i) => <View key={i} style={styles.invitationItem}>
-                <Text>{request.invitee}</Text>
-                <Text>{'Pending'}</Text>
-                <TouchableOpacity style={{
-                  backgroundColor: RUSSIAN.ORANGE,
-                  borderRadius: 2,
-                  paddingVertical: 8,
-                  paddingHorizontal: 16,
-                  marginLeft: 18
-                }}>
-                  <Text style={{ color: RUSSIAN.WHITE, paddingBottom: 4 }}>{'Revoke'}</Text>
-                </TouchableOpacity>
-              </View>)
-              : <Text style={styles.noDataText}>{'You have no pending invitations.'}</Text>
-          }
-        </View>
-      </View>
-    </KeyboardAwareScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -194,7 +219,11 @@ const styles = StyleSheet.create({
     marginTop: 12
   },
   sectionContent: {
-    paddingLeft: 8
+    paddingHorizontal: 8
+  },
+  person: {
+    flex: 1,
+    color: RUSSIAN.LIGHT_GRAY
   },
   requestsHeader: {
     flexDirection: 'row',
@@ -217,13 +246,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%',
     marginVertical: 12
   },
-  inviteButtonStyles: {
-    width: 80,
-    height: 40,
-    backgroundColor: RUSSIAN.GREEN,
-    color: RUSSIAN.WHITE
+  buttonGroup: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    flex: 1
+  },
+  baseButton: {
+    borderRadius: 2,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  buttonInnerds: {
+    color: RUSSIAN.WHITE,
+    paddingBottom: 4
   }
 });

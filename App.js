@@ -16,6 +16,7 @@ import { getTokenFromStorage, decodeJwt } from './src/utils/token-utils';
 
 // Ignore this log:
 import { LogBox } from 'react-native';
+import InvitationForm from './src/components/invitation-form';
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
 ]);
@@ -25,7 +26,7 @@ const Stack = createStackNavigator();
 
 function LoggedInTabScreens() {
   return (
-    <Tab.Navigator 
+    <Tab.Navigator
       screenOptions={{ headerShown: false }}
       tabBar={props => <BottomTab {...props} />}
     >
@@ -77,7 +78,12 @@ function App() {
             }}
           >
             {accessToken ? (
-              <Stack.Screen name="LoggedInScreens" component={LoggedInTabScreens} />
+              <>
+                <Stack.Screen name="LoggedInTabScreens" component={LoggedInTabScreens} />
+                <Stack.Group screenOptions={{ presentation: 'modal' }}>
+                  <Stack.Screen name="INVITATION_FORM" component={InvitationForm} />
+                </Stack.Group>
+              </>
             ) : (
               <>
                 <Stack.Screen name="LOGIN" component={LogInScreen} />

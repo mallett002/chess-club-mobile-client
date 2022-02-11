@@ -14,35 +14,36 @@ import {
 } from '../../constants/queries';
 import { getInviteCreationError } from '../../utils/errors';
 
-export default function InvitationsScreen() {
-  const [invitationError, setInviteError] = useState(null);
-  const [showMakeRequest, setShowMakeRequest] = useState(false);
+export default function InvitationsScreen(props) {
+  console.log('props.navigation.navigate exists!: ', props.navigation.navigate);
+  // const [invitationError, setInviteError] = useState(null);
+  // const [showMakeRequest, setShowMakeRequest] = useState(false);
   const { data: getInvitationsData, error: getInviteError, loading: getInviteLoading, refetch } = useQuery(INVITATIONS_QUERY, {
     fetchPolicy: 'cache-and-network'
   });
-  const [mutate, { loading: createInviteLoading }] = useMutation(CREATE_INVITATION_MUTATION, {
-    onError: (error) => {
-      setInviteError(getInviteCreationError(error));
-    },
-    onCompleted: () => {
-      console.log('success!');
-      setInviteError(null);
-      setShowMakeRequest(false);
-      refetch();
-    }
-  });
-  const createInvitation = (username) => mutate({
-    variables: {
-      inviteeUsername: username
-    }
-  });
-  const [createGameMutate] = useMutation(CREATE_GAME_MUTATION);
-  const createGame = (invitationId, inviteeColor) => createGameMutate({
-    variables: {
-      invitationId,
-      inviteeColor
-    }
-  });
+  // const [mutate, { loading: createInviteLoading }] = useMutation(CREATE_INVITATION_MUTATION, {
+  //   onError: (error) => {
+  //     setInviteError(getInviteCreationError(error));
+  //   },
+  //   onCompleted: () => {
+  //     console.log('success!');
+  //     setInviteError(null);
+  //     setShowMakeRequest(false);
+  //     refetch();
+  //   }
+  // });
+  // const createInvitation = (username) => mutate({
+  //   variables: {
+  //     inviteeUsername: username
+  //   }
+  // });
+  // const [createGameMutate] = useMutation(CREATE_GAME_MUTATION);
+  // const createGame = (invitationId, inviteeColor) => createGameMutate({
+  //   variables: {
+  //     invitationId,
+  //     inviteeColor
+  //   }
+  // });
 
   if (getInviteError || !getInviteLoading && !getInvitationsData || !getInviteLoading && !getInvitationsData.getInvitations) {
     return (
@@ -78,68 +79,68 @@ export default function InvitationsScreen() {
     );
   }
 
-  const { getInvitations: { invitations: myRequests } } = getInvitationsData;
-  const inboundGameRequests = [
-    {
-      invitor: 'scotty2hotty211',
-      invitationId: 'some-id'
-    },
-    {
-      invitor: 'billy',
-      invitationId: 'some-id'
-    },
-    {
-      invitor: 'bobby',
-      invitationId: 'some-id'
-    },
-    {
-      invitor: 'bobby',
-      invitationId: 'some-id'
-    },
-    {
-      invitor: 'bobby',
-      invitationId: 'some-id'
-    },
-    {
-      invitor: 'bobby',
-      invitationId: 'some-id'
-    },
-    {
-      invitor: 'bobby',
-      invitationId: 'some-id'
-    }
-  ];
+  const { getInvitations: { invitations: myRequests, inboundGameRequests } } = getInvitationsData;
+  // const inboundGameRequests = [
+  //   {
+  //     invitor: 'scotty2hotty211',
+  //     invitationId: 'some-id'
+  //   },
+  //   {
+  //     invitor: 'billy',
+  //     invitationId: 'some-id'
+  //   },
+  //   {
+  //     invitor: 'bobby',
+  //     invitationId: 'some-id'
+  //   },
+  //   {
+  //     invitor: 'bobby',
+  //     invitationId: 'some-id'
+  //   },
+  //   {
+  //     invitor: 'bobby',
+  //     invitationId: 'some-id'
+  //   },
+  //   {
+  //     invitor: 'bobby',
+  //     invitationId: 'some-id'
+  //   },
+  //   {
+  //     invitor: 'bobby',
+  //     invitationId: 'some-id'
+  //   }
+  // ];
 
-  const myFakeRequests = [
-    {
-      invitee: 'scotty2hotty211',
-      invitationId: 'some-id'
-    },
-    {
-      invitee: 'billy',
-      invitationId: 'some-id'
-    },
-    {
-      invitee: 'bobby',
-      invitationId: 'some-id'
-    },
-    {
-      invitee: 'bobby',
-      invitationId: 'some-id'
-    },
-    {
-      invitee: 'bobby',
-      invitationId: 'some-id'
-    },
-    {
-      invitee: 'bobby',
-      invitationId: 'some-id'
-    },
-    {
-      invitee: 'bobby',
-      invitationId: 'some-id'
-    }
-  ];
+  // const myFakeRequests = [
+  //   {
+  //     invitee: 'scotty2hotty211',
+  //     invitationId: 'some-id'
+  //   },
+  //   {
+  //     invitee: 'billy',
+  //     invitationId: 'some-id'
+  //   },
+  //   {
+  //     invitee: 'bobby',
+  //     invitationId: 'some-id'
+  //   },
+  //   {
+  //     invitee: 'bobby',
+  //     invitationId: 'some-id'
+  //   },
+  //   {
+  //     invitee: 'bobby',
+  //     invitationId: 'some-id'
+  //   },
+  //   {
+  //     invitee: 'bobby',
+  //     invitationId: 'some-id'
+  //   },
+  //   {
+  //     invitee: 'bobby',
+  //     invitationId: 'some-id'
+  //   }
+  // ];
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -177,21 +178,20 @@ export default function InvitationsScreen() {
               <Text style={{ color: RUSSIAN.GREEN }}>{'Create'}</Text>
               <TouchableOpacity
                 style={{ marginLeft: 8 }}
-                onPress={() => setShowMakeRequest(true)}
-                disabled={showMakeRequest}
+                onPress={() => props.navigation.navigate('INVITATION_FORM')}
               >
                 <Feather
                   name={'arrow-right-circle'}
                   size={28}
-                  color={showMakeRequest ? RUSSIAN.GRAY : RUSSIAN.GREEN}
+                  color={RUSSIAN.GREEN}
                 />
               </TouchableOpacity>
             </View>
           </View>
           <View style={styles.sectionContent}>
             {
-              myFakeRequests.length
-                ? myFakeRequests.map((request, i) => <View key={i} style={styles.invitationItem}>
+              myRequests.length
+                ? myRequests.map((request, i) => <View key={i} style={styles.invitationItem}>
                   <Text style={styles.person}>{request.invitee}</Text>
                   <Text style={{ color: RUSSIAN.LIGHT_SKIN }}>{'Pending'}</Text>
                   <TouchableOpacity style={[styles.baseButton, { backgroundColor: RUSSIAN.ORANGE, marginLeft: 18 }]}>
@@ -210,7 +210,8 @@ export default function InvitationsScreen() {
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: RUSSIAN.DARK,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
+    height: '100%'
   },
   title: {
     color: RUSSIAN.GREEN,

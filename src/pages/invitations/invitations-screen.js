@@ -1,41 +1,21 @@
 import { useQuery, useMutation } from '@apollo/client';
-import React, { useState } from 'react';
+import React from 'react';
 import { SafeAreaView, Text, View, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Feather from 'react-native-vector-icons/Feather';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import InvitationForm from '../../components/invitation-form';
 import { RUSSIAN } from '../../constants/colors';
 import {
-  CREATE_INVITATION_MUTATION,
   CREATE_GAME_MUTATION,
   INVITATIONS_QUERY,
 } from '../../constants/queries';
-import { getInviteCreationError } from '../../utils/errors';
 
 export default function InvitationsScreen(props) {
   // const [invitationError, setInviteError] = useState(null);
-  // const [showMakeRequest, setShowMakeRequest] = useState(false);
   const { data: getInvitationsData, error: getInviteError, loading: getInviteLoading, refetch } = useQuery(INVITATIONS_QUERY, {
     fetchPolicy: 'cache-and-network'
   });
-  // const [mutate, { loading: createInviteLoading }] = useMutation(CREATE_INVITATION_MUTATION, {
-  //   onError: (error) => {
-  //     setInviteError(getInviteCreationError(error));
-  //   },
-  //   onCompleted: () => {
-  //     console.log('success!');
-  //     setInviteError(null);
-  //     setShowMakeRequest(false);
-  //     refetch();
-  //   }
-  // });
-  // const createInvitation = (username) => mutate({
-  //   variables: {
-  //     inviteeUsername: username
-  //   }
-  // });
   // const [createGameMutate] = useMutation(CREATE_GAME_MUTATION);
   // const createGame = (invitationId, inviteeColor) => createGameMutate({
   //   variables: {
@@ -79,67 +59,6 @@ export default function InvitationsScreen(props) {
   }
 
   const { getInvitations: { invitations: myRequests, inboundGameRequests } } = getInvitationsData;
-  // const inboundGameRequests = [
-  //   {
-  //     invitor: 'scotty2hotty211',
-  //     invitationId: 'some-id'
-  //   },
-  //   {
-  //     invitor: 'billy',
-  //     invitationId: 'some-id'
-  //   },
-  //   {
-  //     invitor: 'bobby',
-  //     invitationId: 'some-id'
-  //   },
-  //   {
-  //     invitor: 'bobby',
-  //     invitationId: 'some-id'
-  //   },
-  //   {
-  //     invitor: 'bobby',
-  //     invitationId: 'some-id'
-  //   },
-  //   {
-  //     invitor: 'bobby',
-  //     invitationId: 'some-id'
-  //   },
-  //   {
-  //     invitor: 'bobby',
-  //     invitationId: 'some-id'
-  //   }
-  // ];
-
-  // const myFakeRequests = [
-  //   {
-  //     invitee: 'scotty2hotty211',
-  //     invitationId: 'some-id'
-  //   },
-  //   {
-  //     invitee: 'billy',
-  //     invitationId: 'some-id'
-  //   },
-  //   {
-  //     invitee: 'bobby',
-  //     invitationId: 'some-id'
-  //   },
-  //   {
-  //     invitee: 'bobby',
-  //     invitationId: 'some-id'
-  //   },
-  //   {
-  //     invitee: 'bobby',
-  //     invitationId: 'some-id'
-  //   },
-  //   {
-  //     invitee: 'bobby',
-  //     invitationId: 'some-id'
-  //   },
-  //   {
-  //     invitee: 'bobby',
-  //     invitationId: 'some-id'
-  //   }
-  // ];
 
   return (
     <SafeAreaView style={styles.wrapper}>

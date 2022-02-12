@@ -24,32 +24,15 @@ function InvitationForm(props) {
   const [selectedColor, setSelectedColor] = useState('w');
   const [invitationError, setInviteError] = useState(null);
 
-  const [mutate, { loading: createInviteLoading }] = useMutation(CREATE_INVITATION_MUTATION, {
+  const [mutate] = useMutation(CREATE_INVITATION_MUTATION, {
     onError: (error) => {
       setInviteError(getInviteCreationError(error));
     },
     onCompleted: () => {
-      console.log('success!');
-      setInviteError(null);
-      refetch();
+      props.route.params.refetch();
+      props.navigation.goBack();
     }
   });
-  const createInvitation = (username) => mutate({
-    variables: {
-      inviteeUsername: username
-    }
-  });
-
-  if (props.loading) {
-    return (
-      <View style={styles.loader}>
-        <ActivityIndicator
-          color={RUSSIAN.ORANGE}
-          size={'large'}
-        />
-      </View>
-    );
-  }
 
   return (
     <View style={styles.wrapper}>
@@ -73,10 +56,13 @@ function InvitationForm(props) {
         validateOnChange
         validateOnBlur
         validationSchema={createInvitationSchema}
-        onSubmit={({ username }, actions) => {
-          // props.createInvitation(username);
-
-          actions.setSubmitting(false);
+        onSubmit={({ username }) => {
+          mutate({
+            variables: {
+              inviteeUsername: username,
+              inviteeColor: selectedColor
+            }
+          });
         }}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (

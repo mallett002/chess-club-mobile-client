@@ -96,7 +96,7 @@ export default function InvitationsScreen(props) {
               <Text style={{ color: RUSSIAN.GREEN }}>{'Create'}</Text>
               <TouchableOpacity
                 style={{ marginLeft: 8 }}
-                onPress={() => props.navigation.navigate('INVITATION_FORM')}
+                onPress={() => props.navigation.navigate('INVITATION_FORM', { refetch })}
               >
                 <Feather
                   name={'arrow-right-circle'}

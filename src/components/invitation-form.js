@@ -29,8 +29,7 @@ function InvitationForm(props) {
       setInviteError(getInviteCreationError(error));
     },
     onCompleted: () => {
-      props.route.params.refetch();
-      props.navigation.goBack();
+      props.navigation.navigate('Invitations', { updated: true });
     }
   });
 
@@ -56,19 +55,20 @@ function InvitationForm(props) {
         validateOnChange
         validateOnBlur
         validationSchema={createInvitationSchema}
-        onSubmit={({ username }) => {
+        onSubmit={({ username }, actions) => {
           mutate({
             variables: {
               inviteeUsername: username,
               inviteeColor: selectedColor
             }
           });
+          actions.setSubmitting(false);
         }}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (
           <View style={styles.formContainer}>
-            <Text style={styles.subtitle}>{'Who would you like to play?'}</Text>
             <View style={styles.inputContainer}>
+              <Text style={styles.subtitle}>{'Who would you like to play?'}</Text>
               <TextInput
                 placeholder={'opponent username'}
                 placeholderTextColor={RUSSIAN.GRAY}
@@ -79,9 +79,9 @@ function InvitationForm(props) {
               />
               {errors.username && touched.username ? (<Text style={styles.inputError}>{errors.username}</Text>) : null}
             </View>
-            <View>
+            <View style={styles.selectColorContainer}>
               <Text style={styles.subtitle}>{'Select a color:'}</Text>
-              <View style={styles.selectColorWrapper}>
+              <View style={styles.selectColorButtons}>
                 <TouchableOpacity
                   style={[getRadioStyles('w', selectedColor), styles.radioButton]}
                   onPress={() => setSelectedColor('w')}
@@ -96,7 +96,14 @@ function InvitationForm(props) {
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={styles.buttonGroup}>
+            {
+              invitationError ?
+                <View style={styles.errorContainer}>
+                  <Text style={styles.inputError}>{invitationError}</Text>
+                </View>
+                : null
+            }
+            <View style={styles.submitCancelContainer}>
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: RUSSIAN.ORANGE }]}
                 onPress={() => props.navigation.goBack()}
@@ -105,8 +112,8 @@ function InvitationForm(props) {
               </TouchableOpacity>
               <TouchableOpacity
                 disabled={false}
-                // disabled={isSubmitting || !Object.keys(touched).length || Object.keys(errors).length}
-                style={getSubmitButtonStyles(touched, errors, isSubmitting)}
+                disabled={isSubmitting || !values.username || Object.keys(errors).length}
+                style={getSubmitButtonStyles(values, errors, isSubmitting)}
                 type="submit"
                 onPress={handleSubmit}
               >
@@ -117,9 +124,6 @@ function InvitationForm(props) {
                 }
               </TouchableOpacity>
             </View>
-            {
-              invitationError ? <Text style={styles.inputError}>{invitationError}</Text> : null
-            }
           </View>
         )}
       </Formik>
@@ -129,7 +133,7 @@ function InvitationForm(props) {
 
 
 function getRadioStyles(input, selected) {
-  const inputStyles = { backgroundColor: RUSSIAN.GRAY };
+  const inputStyles = { backgroundColor: RUSSIAN.DARK_GRAY };
 
   if (input === 'w' && selected === 'w') {
     inputStyles.backgroundColor = RUSSIAN.GREEN;
@@ -140,7 +144,7 @@ function getRadioStyles(input, selected) {
   return inputStyles;
 }
 
-function getSubmitButtonStyles(touched, errors, isSubmitting) {
+function getSubmitButtonStyles(values, errors, isSubmitting) {
   const buttonStyles = {
     backgroundColor: RUSSIAN.GREEN,
     width: 150,
@@ -151,9 +155,9 @@ function getSubmitButtonStyles(touched, errors, isSubmitting) {
     color: RUSSIAN.WHITE
   };
 
-  // if (isSubmitting || !Object.keys(touched).length || Object.keys(errors).length) {
-  //   buttonStyles.backgroundColor = RUSSIAN.GRAY;
-  // }
+  if (isSubmitting || !values.username || Object.keys(errors).length) {
+    buttonStyles.backgroundColor = RUSSIAN.GRAY;
+  }
 
   return buttonStyles;
 }
@@ -188,7 +192,7 @@ const styles = StyleSheet.create({
     color: RUSSIAN.GREEN,
     fontSize: 32
   },
-  selectColorWrapper: {
+  selectColorButtons: {
     width: '90%',
     flexDirection: 'row'
   },
@@ -205,7 +209,8 @@ const styles = StyleSheet.create({
     marginBottom: 12
   },
   formContainer: {
-    width: '100%'
+    width: '100%',
+    justifyContent: 'space-evenly'
   },
   inputContainer: {
     marginBottom: 24
@@ -217,8 +222,7 @@ const styles = StyleSheet.create({
     color: RUSSIAN.LIGHT_GRAY,
     padding: Platform.OS === 'android' ? 10 : 16
   },
-  buttonGroup: {
-    marginTop: 50,
+  submitCancelContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
@@ -229,6 +233,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 8,
     color: RUSSIAN.WHITE
+  },
+  errorContainer: {
+    marginVertical: 40
   },
   inputError: {
     color: RUSSIAN.ORANGE

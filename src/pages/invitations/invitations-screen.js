@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@apollo/client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SafeAreaView, Text, View, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Feather from 'react-native-vector-icons/Feather';
@@ -23,6 +23,15 @@ export default function InvitationsScreen(props) {
   //     inviteeColor
   //   }
   // });
+
+  useEffect(() => {
+    if (props.route && props.route.params && props.route.params.updated) {
+      refetch();
+    } else {
+      console.log('no need to refetch......');
+    }
+
+  }, [props.route.params])
 
   if (getInviteError || !getInviteLoading && !getInvitationsData || !getInviteLoading && !getInvitationsData.getInvitations) {
     return (
@@ -96,7 +105,7 @@ export default function InvitationsScreen(props) {
               <Text style={{ color: RUSSIAN.GREEN }}>{'Create'}</Text>
               <TouchableOpacity
                 style={{ marginLeft: 8 }}
-                onPress={() => props.navigation.navigate('INVITATION_FORM', { refetch })}
+                onPress={() => props.navigation.navigate('INVITATION_FORM')}
               >
                 <Feather
                   name={'arrow-right-circle'}

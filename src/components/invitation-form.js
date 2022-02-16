@@ -48,6 +48,9 @@ function InvitationForm(props) {
         </TouchableOpacity>
         <Text style={styles.title}>{'Create Invitation'}</Text>
       </View>
+      <View style={styles.subTitleContainer}>
+        <Text style={styles.subTitle}>{'Invite an opponent to a game.'}</Text>
+      </View>
       <Formik
         initialValues={{
           username: '',
@@ -68,7 +71,7 @@ function InvitationForm(props) {
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
-              <Text style={styles.subtitle}>{'Who would you like to play?'}</Text>
+              <Text style={styles.labelText}>{'Who would you like to play?'}</Text>
               <TextInput
                 placeholder={'opponent username'}
                 placeholderTextColor={RUSSIAN.GRAY}
@@ -78,9 +81,7 @@ function InvitationForm(props) {
                 value={values.username}
               />
               {errors.username && touched.username ? (<Text style={styles.inputError}>{errors.username}</Text>) : null}
-            </View>
-            <View style={styles.selectColorContainer}>
-              <Text style={styles.subtitle}>{'Select a color:'}</Text>
+              <Text style={styles.labelText}>{'Select a color:'}</Text>
               <View style={styles.selectColorButtons}>
                 <TouchableOpacity
                   style={[getRadioStyles('w', selectedColor), styles.radioButton]}
@@ -179,9 +180,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     height: '100%'
   },
-  loader: {
-    marginTop: height * 0.15
-  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -203,26 +201,40 @@ const styles = StyleSheet.create({
   selectColorText: {
     color: RUSSIAN.WHITE
   },
-  subtitle: {
+  subTitleContainer: {
+    paddingHorizontal: 8,
+    marginBottom: 52
+  },
+  subTitle: {
+    fontSize: 20,
+    color: RUSSIAN.LIGHT_GRAY
+  },
+  labelText: {
     fontSize: 16,
     color: RUSSIAN.LIGHT_GRAY,
     marginBottom: 12
   },
   formContainer: {
     width: '100%',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
+    height: '95%',
+    paddingHorizontal: 8,
   },
   inputContainer: {
-    marginBottom: 24
+    flex: 1,
+    justifyContent: 'flex-start'
   },
   input: {
     borderWidth: 1,
     borderRadius: 8,
     borderColor: RUSSIAN.GRAY,
     color: RUSSIAN.LIGHT_GRAY,
-    padding: Platform.OS === 'android' ? 10 : 16
+    padding: Platform.OS === 'android' ? 10 : 16,
+    marginBottom: 24
   },
   submitCancelContainer: {
+    alignItems: 'center',
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
@@ -235,22 +247,14 @@ const styles = StyleSheet.create({
     color: RUSSIAN.WHITE
   },
   errorContainer: {
-    marginVertical: 40
+    flex: 1
   },
   inputError: {
     color: RUSSIAN.ORANGE
   },
-  serverError: {
-    height: 20,
-    alignItems: 'center'
-  },
   buttonText: {
     color: RUSSIAN.WHITE
-  },
-  loginLinkContainer: {
-    marginTop: 50
-  },
-  linkText: { color: RUSSIAN.ORANGE }
+  }
 });
 
 export default InvitationForm;

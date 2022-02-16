@@ -98,6 +98,7 @@ function InvitationForm(props) {
               </View>
             </View>
             {
+              // todo: fix this one's styles:
               invitationError ?
                 <View style={styles.errorContainer}>
                   <Text style={styles.inputError}>{invitationError}</Text>

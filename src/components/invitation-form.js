@@ -35,20 +35,20 @@ function InvitationForm(props) {
 
   return (
     <View style={styles.wrapper}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={{ marginRight: 12 }}
-          onPress={() => props.navigation.goBack()}
-        >
-          <Feather
-            name={'x'}
-            size={28}
-            color={RUSSIAN.GRAY}
-          />
-        </TouchableOpacity>
-        <Text style={styles.title}>{'Create Invitation'}</Text>
-      </View>
-      <View style={styles.subTitleContainer}>
+      <View style={styles.headerContainer}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={{ marginRight: 12 }}
+            onPress={() => props.navigation.goBack()}
+          >
+            <Feather
+              name={'x'}
+              size={28}
+              color={RUSSIAN.GRAY}
+            />
+          </TouchableOpacity>
+          <Text style={styles.title}>{'Create Invitation'}</Text>
+        </View>
         <Text style={styles.subTitle}>{'Invite an opponent to a game.'}</Text>
       </View>
       <Formik
@@ -175,10 +175,13 @@ function getInputStyles(error, touched) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    paddingHorizontal: 8,
+    paddingHorizontal: 12,
     backgroundColor: RUSSIAN.DARK,
     marginBottom: 16,
     height: '100%'
+  },
+  headerContainer: {
+    flex: 1
   },
   header: {
     flexDirection: 'row',
@@ -202,7 +205,6 @@ const styles = StyleSheet.create({
     color: RUSSIAN.WHITE
   },
   subTitleContainer: {
-    paddingHorizontal: 8,
     marginBottom: 52
   },
   subTitle: {
@@ -217,8 +219,7 @@ const styles = StyleSheet.create({
   formContainer: {
     width: '100%',
     justifyContent: 'space-evenly',
-    height: '95%',
-    paddingHorizontal: 8,
+    flex: 3
   },
   inputContainer: {
     flex: 1,
@@ -233,7 +234,8 @@ const styles = StyleSheet.create({
     marginBottom: 24
   },
   submitCancelContainer: {
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    paddingBottom: 20,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between'

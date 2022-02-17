@@ -6,7 +6,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Feather from 'react-native-vector-icons/Feather';
 
-import { RUSSIAN } from '../constants/colors';
+import colors, { RUSSIAN } from '../constants/colors';
 import { CREATE_INVITATION_MUTATION } from '../constants/queries';
 import { getInviteCreationError } from '../utils/errors';
 
@@ -97,34 +97,44 @@ function InvitationForm(props) {
                 </TouchableOpacity>
               </View>
             </View>
-            {
-              // todo: fix this one's styles:
-              invitationError ?
-                <View style={styles.errorContainer}>
-                  <Text style={styles.inputError}>{invitationError}</Text>
-                </View>
-                : null
-            }
             <View style={styles.submitCancelContainer}>
-              <TouchableOpacity
-                style={[styles.button, { backgroundColor: RUSSIAN.ORANGE }]}
-                onPress={() => props.navigation.goBack()}
-              >
-                <Text style={{ color: RUSSIAN.WHITE }}>{'Cancel'}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                disabled={false}
-                disabled={isSubmitting || !values.username || Object.keys(errors).length}
-                style={getSubmitButtonStyles(values, errors, isSubmitting)}
-                type="submit"
-                onPress={handleSubmit}
-              >
-                {
-                  isSubmitting
-                    ? <ActivityIndicator color={RUSSIAN.WHITE} />
-                    : <Text style={styles.buttonText}>{'Send Invitation'}</Text>
-                }
-              </TouchableOpacity>
+              {
+                invitationError ?
+                  <View style={styles.errorContainer}>
+                    <Text style={styles.inputError}>{invitationError}</Text>
+                    <TouchableOpacity
+                      onPress={() => setInviteError(false)}
+                    >
+                      <Feather
+                        name={'x'}
+                        size={20}
+                        color={RUSSIAN.MAROON}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  : null
+              }
+              <View style={styles.buttonGroup}>
+                <TouchableOpacity
+                  style={[styles.button, { backgroundColor: RUSSIAN.ORANGE }]}
+                  onPress={() => props.navigation.goBack()}
+                >
+                  <Text style={{ color: RUSSIAN.WHITE }}>{'Cancel'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  disabled={false}
+                  disabled={isSubmitting || !values.username || Object.keys(errors).length}
+                  style={getSubmitButtonStyles(values, errors, isSubmitting)}
+                  type="submit"
+                  onPress={handleSubmit}
+                >
+                  {
+                    isSubmitting
+                      ? <ActivityIndicator color={RUSSIAN.WHITE} />
+                      : <Text style={styles.buttonText}>{'Send Invitation'}</Text>
+                  }
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         )}
@@ -235,11 +245,14 @@ const styles = StyleSheet.create({
     marginBottom: 24
   },
   submitCancelContainer: {
+
+  },
+  buttonGroup: {
     alignItems: 'flex-end',
     paddingBottom: 20,
-    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginTop: 14
   },
   button: {
     width: 150,
@@ -250,10 +263,17 @@ const styles = StyleSheet.create({
     color: RUSSIAN.WHITE
   },
   errorContainer: {
-    flex: 1
+    borderWidth: 2,
+    borderColor: RUSSIAN.MAROON,
+    backgroundColor: colors.HIGHLIGHT,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   inputError: {
-    color: RUSSIAN.ORANGE
+    color: RUSSIAN.WHITE
   },
   buttonText: {
     color: RUSSIAN.WHITE

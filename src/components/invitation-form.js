@@ -5,6 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Feather from 'react-native-vector-icons/Feather';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import colors, { RUSSIAN } from '../constants/colors';
 import { CREATE_INVITATION_MUTATION } from '../constants/queries';
@@ -34,7 +35,10 @@ function InvitationForm(props) {
   });
 
   return (
-    <View style={styles.wrapper}>
+    <KeyboardAwareScrollView
+      contentContainerStyle={styles.wrapper}
+      scrollEnabled={false}
+    >
       <View style={styles.headerContainer}>
         <View style={styles.header}>
           <TouchableOpacity
@@ -147,7 +151,7 @@ function InvitationForm(props) {
           </View>
         )}
       </Formik>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 

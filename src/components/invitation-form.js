@@ -72,12 +72,38 @@ function InvitationForm(props) {
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
               <Text style={styles.labelText}>{'Who would you like to play?'}</Text>
+              {
+                invitationError ?
+                  <View style={styles.errorContainer}>
+                    <Feather
+                      name={'alert-triangle'}
+                      size={24}
+                      color={RUSSIAN.MAROON}
+                    />
+                    <Text style={styles.inputError}>{invitationError}</Text>
+                    <TouchableOpacity
+                      onPress={() => setInviteError(false)}
+                    >
+                      <Feather
+                        name={'x'}
+                        size={24}
+                        color={RUSSIAN.MAROON}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  : null
+              }
               <TextInput
                 placeholder={'opponent username'}
                 placeholderTextColor={RUSSIAN.GRAY}
                 style={getInputStyles(errors.username, touched.username)}
                 onChangeText={handleChange('username')}
                 onBlur={handleBlur('username')}
+                onFocus={() => {
+                  if (invitationError) {
+                    setInviteError(false);
+                  }
+                }}
                 value={values.username}
               />
               {errors.username && touched.username ? (<Text style={styles.inputError}>{errors.username}</Text>) : null}
@@ -97,44 +123,26 @@ function InvitationForm(props) {
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={styles.submitCancelContainer}>
-              {
-                invitationError ?
-                  <View style={styles.errorContainer}>
-                    <Text style={styles.inputError}>{invitationError}</Text>
-                    <TouchableOpacity
-                      onPress={() => setInviteError(false)}
-                    >
-                      <Feather
-                        name={'x'}
-                        size={20}
-                        color={RUSSIAN.MAROON}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  : null
-              }
-              <View style={styles.buttonGroup}>
-                <TouchableOpacity
-                  style={[styles.button, { backgroundColor: RUSSIAN.ORANGE }]}
-                  onPress={() => props.navigation.goBack()}
-                >
-                  <Text style={{ color: RUSSIAN.WHITE }}>{'Cancel'}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  disabled={false}
-                  disabled={isSubmitting || !values.username || Object.keys(errors).length}
-                  style={getSubmitButtonStyles(values, errors, isSubmitting)}
-                  type="submit"
-                  onPress={handleSubmit}
-                >
-                  {
-                    isSubmitting
-                      ? <ActivityIndicator color={RUSSIAN.WHITE} />
-                      : <Text style={styles.buttonText}>{'Send Invitation'}</Text>
-                  }
-                </TouchableOpacity>
-              </View>
+            <View style={styles.buttonGroup}>
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: RUSSIAN.ORANGE }]}
+                onPress={() => props.navigation.goBack()}
+              >
+                <Text style={{ color: RUSSIAN.WHITE }}>{'Cancel'}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                disabled={false}
+                disabled={isSubmitting || !values.username || Object.keys(errors).length}
+                style={getSubmitButtonStyles(values, errors, isSubmitting)}
+                type="submit"
+                onPress={handleSubmit}
+              >
+                {
+                  isSubmitting
+                    ? <ActivityIndicator color={RUSSIAN.WHITE} />
+                    : <Text style={styles.buttonText}>{'Send Invitation'}</Text>
+                }
+              </TouchableOpacity>
             </View>
           </View>
         )}
@@ -267,13 +275,15 @@ const styles = StyleSheet.create({
     borderColor: RUSSIAN.MAROON,
     backgroundColor: colors.HIGHLIGHT,
     paddingVertical: 12,
-    paddingHorizontal: 12,
+    paddingHorizontal: 6,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginBottom: 8
   },
   inputError: {
-    color: RUSSIAN.WHITE
+    color: RUSSIAN.WHITE,
+    fontSize: 13
   },
   buttonText: {
     color: RUSSIAN.WHITE

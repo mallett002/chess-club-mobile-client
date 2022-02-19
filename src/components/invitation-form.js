@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ActivityIndicator, Dimensions, Platform } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ActivityIndicator, Platform } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -10,8 +10,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import colors, { RUSSIAN } from '../constants/colors';
 import { CREATE_INVITATION_MUTATION } from '../constants/queries';
 import { getInviteCreationError } from '../utils/errors';
-
-const { height } = Dimensions.get('window');
+import ErrorAlert from '../components/error-alert';
 
 const createInvitationSchema = Yup.object().shape({
   username: Yup.string()
@@ -78,23 +77,10 @@ function InvitationForm(props) {
               <Text style={styles.labelText}>{'Who would you like to play?'}</Text>
               {
                 invitationError ?
-                  <View style={styles.errorContainer}>
-                    <Feather
-                      name={'alert-triangle'}
-                      size={24}
-                      color={RUSSIAN.MAROON}
-                    />
-                    <Text style={styles.inputError}>{invitationError}</Text>
-                    <TouchableOpacity
-                      onPress={() => setInviteError(false)}
-                    >
-                      <Feather
-                        name={'x'}
-                        size={24}
-                        color={RUSSIAN.MAROON}
-                      />
-                    </TouchableOpacity>
-                  </View>
+                  <ErrorAlert
+                    invitationError={invitationError}
+                    setError={setInviteError}
+                  />
                   : null
               }
               <TextInput

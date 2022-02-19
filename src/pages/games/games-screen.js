@@ -25,15 +25,13 @@ export default function () {
     );
   }
 
-  console.log(JSON.stringify({data}));
-
   return (
     <View>
       <Text>{'Games'}</Text>
       {
         data && data.getGames && data.getGames.length
           ? data.getGames.map((game, i) => <View key={i}>
-            <Text style={{marginBotom: 8, fontSize: 24}}>{`game ${i+1}`}</Text>
+            <Text style={{marginBottom: 8, fontSize: 24}}>{`game ${i+1}`}</Text>
             <Text style={{paddingLeft: 8}}>{`playerOne: ${game.playerOne}`}</Text>
             <Text style={{paddingLeft: 8}}>{`playerTwo: ${game.playerTwo}`}</Text>
           </View>)

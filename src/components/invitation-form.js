@@ -65,7 +65,7 @@ function InvitationForm(props) {
           mutate({
             variables: {
               inviteeUsername: username,
-              inviteeColor: selectedColor
+              invitorColor: selectedColor
             }
           });
           actions.setSubmitting(false);

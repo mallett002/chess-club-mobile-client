@@ -83,20 +83,23 @@ function InvitationForm(props) {
                   />
                   : null
               }
-              <TextInput
-                placeholder={'opponent username'}
-                placeholderTextColor={RUSSIAN.GRAY}
-                style={getInputStyles(errors.username, touched.username)}
-                onChangeText={handleChange('username')}
-                onBlur={handleBlur('username')}
-                onFocus={() => {
-                  if (invitationError) {
-                    setInviteError(false);
-                  }
-                }}
-                value={values.username}
-              />
-              {errors.username && touched.username ? (<Text style={styles.inputError}>{errors.username}</Text>) : null}
+              <View style={styles.usernameInputGroup}>
+                <TextInput
+                  placeholder={'opponent username'}
+                  placeholderTextColor={RUSSIAN.GRAY}
+                  style={getInputStyles(errors.username, touched.username)}
+                  onChangeText={handleChange('username')}
+                  onBlur={handleBlur('username')}
+                  onFocus={() => {
+                    if (invitationError) {
+                      setInviteError(false);
+                    }
+                  }}
+                  value={values.username}
+                />
+                {errors.username && touched.username ? (<Text style={styles.inputError}>{errors.username}</Text>) : null}
+              </View>
+
               <Text style={styles.labelText}>{'Select a color:'}</Text>
               <View style={styles.selectColorButtons}>
                 <TouchableOpacity
@@ -234,16 +237,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start'
   },
+  usernameInputGroup: {
+    marginBottom: 24
+  },
   input: {
     borderWidth: 1,
     borderRadius: 8,
     borderColor: RUSSIAN.GRAY,
     color: RUSSIAN.LIGHT_GRAY,
-    padding: Platform.OS === 'android' ? 10 : 16,
-    marginBottom: 24
+    padding: Platform.OS === 'android' ? 10 : 16
   },
-  submitCancelContainer: {
-
+  inputError: {
+    color: RUSSIAN.ORANGE,
+    fontSize: 13,
+    marginTop: 6
   },
   buttonGroup: {
     alignItems: 'flex-end',
@@ -259,21 +266,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 8,
     color: RUSSIAN.WHITE
-  },
-  errorContainer: {
-    borderWidth: 2,
-    borderColor: RUSSIAN.MAROON,
-    backgroundColor: colors.HIGHLIGHT,
-    paddingVertical: 12,
-    paddingHorizontal: 6,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 8
-  },
-  inputError: {
-    color: RUSSIAN.WHITE,
-    fontSize: 13
   },
   buttonText: {
     color: RUSSIAN.WHITE

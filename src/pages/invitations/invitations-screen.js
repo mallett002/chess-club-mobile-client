@@ -4,7 +4,6 @@ import { SafeAreaView, Text, View, ActivityIndicator, StyleSheet, ScrollView } f
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Feather from 'react-native-vector-icons/Feather';
 
-import InvitationForm from '../../components/invitation-form';
 import { RUSSIAN } from '../../constants/colors';
 import {
   CREATE_GAME_MUTATION,
@@ -12,26 +11,22 @@ import {
 } from '../../constants/queries';
 
 export default function InvitationsScreen(props) {
-  // const [invitationError, setInviteError] = useState(null);
   const { data: getInvitationsData, error: getInviteError, loading: getInviteLoading, refetch } = useQuery(INVITATIONS_QUERY, {
     fetchPolicy: 'cache-and-network'
   });
-  // const [createGameMutate] = useMutation(CREATE_GAME_MUTATION);
-  // const createGame = (invitationId, inviteeColor) => createGameMutate({
-  //   variables: {
-  //     invitationId,
-  //     inviteeColor
-  //   }
-  // });
+  const [createGameMutate, { data: createGameData, error: createGameError }] = useMutation(CREATE_GAME_MUTATION);
+  const createGame = (invitationId, inviteeColor) => createGameMutate({
+    variables: {
+      invitationId,
+      inviteeColor
+    }
+  });
 
   useEffect(() => {
-    if (props.route && props.route.params && props.route.params.updated) {
+    if (props.route && props.route.params && props.route.params.updated || createGameData && createGameData.createGame) {
       refetch();
-    } else {
-      console.log('no need to refetch......');
     }
-
-  }, [props.route.params])
+  }, [props.route.params, createGameData])
 
   if (getInviteError || !getInviteLoading && !getInvitationsData || !getInviteLoading && !getInvitationsData.getInvitations) {
     return (

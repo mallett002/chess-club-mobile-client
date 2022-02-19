@@ -1,6 +1,22 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { getTokenFromStorage } from '../utils/token-utils';
+
+const httpLink = createHttpLink({
+  uri: 'http://redacted:4000/graphql',
+});
+const authLink = setContext(async () => {
+  const headers = { authorization: '' };
+  const storageToken = await getTokenFromStorage()
+
+  if (storageToken) {
+    headers.authorization = storageToken;
+  }
+
+  return { headers }
+});
 
 export const client = new ApolloClient({
-  uri: 'http://redacted:4000/graphql',
   cache: new InMemoryCache(),
+  link: authLink.concat(httpLink),
 });

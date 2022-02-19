@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
+import { RUSSIAN } from '../../constants/colors';
 
 import { AppContext } from '../../utils/context';
 import { removeTokenFromStorage } from '../../utils/token-utils';
@@ -21,7 +22,7 @@ function ProfileScreen() {
     return (
       <View style={styles.loader}>
         <ActivityIndicator
-          color={'red'}
+          color={RUSSIAN.GREEN}
           size={'large'}
         />
       </View>
@@ -30,7 +31,7 @@ function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <Text>{`Signed in as ${username}`}</Text>
+      <Text style={styles.text}>{`Signed in as ${username}`}</Text>
       <Text
         onPress={logUserOut}
         style={styles.logoutText}
@@ -45,10 +46,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: '100%',
+    backgroundColor: RUSSIAN.LIGHT_GRAY
+  },
+  text: {
+    color: RUSSIAN.DARK_GRAY
   },
   logoutText: {
-    color: 'red'
+    color: RUSSIAN.ORANGE
   }
 });
 

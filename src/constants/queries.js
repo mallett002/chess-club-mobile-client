@@ -25,8 +25,8 @@ export const CURRENT_GAMES_QUERY = gql`
   }
 `;
 export const CREATE_INVITATION_MUTATION = gql`
-  mutation createInvitation($inviteeUsername: String!) {
-  createInvitation(inviteeUsername: $inviteeUsername) {
+  mutation createInvitation($inviteeUsername: String!, $invitorColor: InvitorColor!) {
+  createInvitation(inviteeUsername: $inviteeUsername, invitorColor: $invitorColor) {
     invitationId
     invitor {
       playerId
@@ -40,8 +40,8 @@ export const CREATE_INVITATION_MUTATION = gql`
 }
 `;
 export const CREATE_GAME_MUTATION = gql`
-  mutation createGame($invitationId: ID!, $inviteeColor: String!) {
-    createGame(invitationId: $invitationId, inviteeColor: $inviteeColor) {
+  mutation createGame($invitationId: ID!) {
+    createGame(invitationId: $invitationId) {
       gameId
       playerOne
       playerTwo

@@ -15,12 +15,6 @@ export default function InvitationsScreen(props) {
     fetchPolicy: 'cache-and-network'
   });
   const [createGameMutate, { data: createGameData, error: createGameError }] = useMutation(CREATE_GAME_MUTATION);
-  const createGame = (invitationId, inviteeColor) => createGameMutate({
-    variables: {
-      invitationId,
-      inviteeColor
-    }
-  });
 
   useEffect(() => {
     if (props.route && props.route.params && props.route.params.updated || createGameData && createGameData.createGame) {
@@ -79,7 +73,7 @@ export default function InvitationsScreen(props) {
                     <TouchableOpacity
                       style={[styles.baseButton, { backgroundColor: RUSSIAN.GREEN }]}
                       onPress={() => {
-                        createGame(request.invitationId, 'w');
+                        createGameMutate({ variables: { invitationId: request.invitationId } })
                       }}
                     >
                       <Text style={styles.buttonInnerds}>{'Accept'}</Text>

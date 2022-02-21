@@ -25,14 +25,16 @@ export default function () {
     );
   }
 
-  console.log({data, error, loading});
-
   return (
     <View>
       <Text>{'Games'}</Text>
       {
         data && data.getGames && data.getGames.length
-          ? data.getGames.map((game) => <Text key={game.gameId}>{game.gameId}</Text>)
+          ? data.getGames.map((game, i) => <View key={i}>
+            <Text style={{marginBottom: 8, fontSize: 24}}>{`game ${i+1}`}</Text>
+            <Text style={{paddingLeft: 8}}>{`playerOne: ${game.playerOne}`}</Text>
+            <Text style={{paddingLeft: 8}}>{`playerTwo: ${game.playerTwo}`}</Text>
+          </View>)
           : <Text>{"You currently don't have any games"}</Text>
       }
     </View>

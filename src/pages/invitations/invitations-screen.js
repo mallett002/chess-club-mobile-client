@@ -20,8 +20,8 @@ export default function InvitationsScreen(props) {
 
   useEffect(() => {
     if (props.route && props.route.params && props.route.params.updated
-       || createGameData && createGameData.createGame
-       || deleteInviteData && deleteInviteData.deleteInvitation) {
+      || createGameData && createGameData.createGame
+      || deleteInviteData && deleteInviteData.deleteInvitation) {
       refetch();
     }
   }, [props.route.params, createGameData, deleteInviteData]);
@@ -82,7 +82,12 @@ export default function InvitationsScreen(props) {
                     >
                       <Text style={styles.buttonInnerds}>{'Accept'}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.baseButton, { backgroundColor: RUSSIAN.ORANGE, marginLeft: 18 }]}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        deleteInvitation({ variables: { invitationId: request.invitationId } });
+                      }}
+                      style={[styles.baseButton, { backgroundColor: RUSSIAN.ORANGE, marginLeft: 18 }]}
+                    >
                       <Text style={styles.buttonInnerds}>{'Decline'}</Text>
                     </TouchableOpacity>
                   </View>

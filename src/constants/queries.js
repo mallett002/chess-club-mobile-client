@@ -39,6 +39,11 @@ export const CREATE_INVITATION_MUTATION = gql`
   }
 }
 `;
+export const DELETE_INVITATION_MUTATION = gql`
+  mutation deleteInvitation($invitationId: ID!) {
+    deleteInvitation(invitationId: $invitationId)
+  }
+`;
 export const CREATE_GAME_MUTATION = gql`
   mutation createGame($invitationId: ID!) {
     createGame(invitationId: $invitationId) {

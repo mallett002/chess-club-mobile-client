@@ -8,6 +8,7 @@ import { RUSSIAN } from '../../constants/colors';
 import {
   CREATE_GAME_MUTATION,
   INVITATIONS_QUERY,
+  DELETE_INVITATION_MUTATION
 } from '../../constants/queries';
 
 export default function InvitationsScreen(props) {
@@ -15,12 +16,15 @@ export default function InvitationsScreen(props) {
     fetchPolicy: 'cache-and-network'
   });
   const [createGameMutate, { data: createGameData, error: createGameError }] = useMutation(CREATE_GAME_MUTATION);
+  const [deleteInvitation, { data: deleteInviteData, error: deleteInviteError }] = useMutation(DELETE_INVITATION_MUTATION);
 
   useEffect(() => {
-    if (props.route && props.route.params && props.route.params.updated || createGameData && createGameData.createGame) {
+    if (props.route && props.route.params && props.route.params.updated
+       || createGameData && createGameData.createGame
+       || deleteInviteData && deleteInviteData.deleteInvitation) {
       refetch();
     }
-  }, [props.route.params, createGameData])
+  }, [props.route.params, createGameData, deleteInviteData]);
 
   if (getInviteError || !getInviteLoading && !getInvitationsData || !getInviteLoading && !getInvitationsData.getInvitations) {
     return (
@@ -110,7 +114,12 @@ export default function InvitationsScreen(props) {
                 ? myRequests.map((request, i) => <View key={i} style={styles.invitationItem}>
                   <Text style={styles.person}>{request.invitee}</Text>
                   <Text style={{ color: RUSSIAN.LIGHT_SKIN }}>{'Pending'}</Text>
-                  <TouchableOpacity style={[styles.baseButton, { backgroundColor: RUSSIAN.ORANGE, marginLeft: 18 }]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      deleteInvitation({ variables: { invitationId: request.invitationId } });
+                    }}
+                    style={[styles.baseButton, { backgroundColor: RUSSIAN.ORANGE, marginLeft: 18 }]}
+                  >
                     <Text style={styles.buttonInnerds}>{'Revoke'}</Text>
                   </TouchableOpacity>
                 </View>)

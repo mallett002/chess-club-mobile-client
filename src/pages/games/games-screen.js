@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client';
 import { AppContext } from '../../utils/context';
 import { CURRENT_GAMES_QUERY } from '../../constants/queries';
 import { RUSSIAN } from '../../constants/colors';
+import Loading from '../../components/loading';
 
 export default function (props) {
   const { playerId } = useContext(AppContext);
@@ -26,14 +27,7 @@ export default function (props) {
     }, [props.navigation]);
 
   if (loading) {
-    return (
-      <View>
-        <ActivityIndicator
-          color={RUSSIAN.ORANGE}
-          size={'large'}
-        />
-      </View>
-    );
+    return <Loading screen={'Games'}/>;
   }
 
   return (

@@ -4,6 +4,7 @@ import { RUSSIAN } from '../../constants/colors';
 
 import { AppContext } from '../../utils/context';
 import { removeTokenFromStorage } from '../../utils/token-utils';
+import Loading from '../../components/loading';
 
 function ProfileScreen() {
   const [loading, setLoading] = useState(false);
@@ -19,14 +20,7 @@ function ProfileScreen() {
   };
 
   if (loading) {
-    return (
-      <View style={styles.loader}>
-        <ActivityIndicator
-          color={RUSSIAN.GREEN}
-          size={'large'}
-        />
-      </View>
-    );
+    <Loading screen={'Profile'} />
   }
 
   return (

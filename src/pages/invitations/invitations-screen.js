@@ -10,6 +10,7 @@ import {
   INVITATIONS_QUERY,
   DELETE_INVITATION_MUTATION
 } from '../../constants/queries';
+import Loading from '../../components/loading';
 
 export default function InvitationsScreen(props) {
   const { data: getInvitationsData, error: getInviteError, loading: getInviteLoading, refetch } = useQuery(INVITATIONS_QUERY, {
@@ -35,29 +36,7 @@ export default function InvitationsScreen(props) {
   }
 
   if (getInviteLoading) {
-    return (
-      <View style={{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: RUSSIAN.DARK,
-        height: '100%'
-      }}>
-        <Text
-          style={{
-            marginRight: 16,
-            color: RUSSIAN.LIGHT_GRAY,
-            fontSize: 24
-          }}
-        >
-          {'Loading invitations'}
-        </Text>
-        <ActivityIndicator
-          color={RUSSIAN.GREEN}
-          size={'large'}
-        />
-      </View>
-    );
+    return <Loading screen={'Invitations'} />;
   }
 
   const { getInvitations: { invitations: myRequests, inboundGameRequests } } = getInvitationsData;

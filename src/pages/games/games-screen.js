@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Text, View, ActivityIndicator } from 'react-native';
 import { useQuery } from '@apollo/client';
 
@@ -8,11 +8,17 @@ import { RUSSIAN } from '../../constants/colors';
 
 export default function () {
   const { playerId } = useContext(AppContext);
-  const { data, error, loading } = useQuery(CURRENT_GAMES_QUERY, {
+  const { data, error, loading, refetch } = useQuery(CURRENT_GAMES_QUERY, {
     variables: {
       playerId
-    }
+    },
+    fetchPolicy: 'cache-and-network'
   });
+
+  // todo: work on fetching when something changes in the games list
+  useEffect(() => {
+    refetch();
+  }, [data])
 
   if (loading) {
     return (

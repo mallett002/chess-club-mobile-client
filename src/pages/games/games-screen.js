@@ -6,7 +6,7 @@ import { AppContext } from '../../utils/context';
 import { CURRENT_GAMES_QUERY } from '../../constants/queries';
 import { RUSSIAN } from '../../constants/colors';
 
-export default function () {
+export default function (props) {
   const { playerId } = useContext(AppContext);
   const { data, error, loading, refetch } = useQuery(CURRENT_GAMES_QUERY, {
     variables: {
@@ -15,10 +15,15 @@ export default function () {
     fetchPolicy: 'cache-and-network'
   });
 
-  // todo: work on fetching when something changes in the games list
   useEffect(() => {
-    refetch();
-  }, [data])
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      if (refetch) {
+        refetch();
+      }
+    });
+  
+    return unsubscribe;
+    }, [props.navigation]);
 
   if (loading) {
     return (

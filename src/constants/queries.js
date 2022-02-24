@@ -14,6 +14,17 @@ export const INVITATIONS_QUERY = gql`
     }
   }
 `;
+
+// Todo: get opponentUsername & playerId for turn in this CURRENT_GAMES_QUERY:
+/*
+  {
+    gameId: ID!
+    playerOne: ID!
+    playerTwo: ID!
+    turn: ID!
+    opponentUsername: String!
+  }
+*/
 export const CURRENT_GAMES_QUERY = gql`
   query GetGames($playerId: ID!){
     getGames(playerId: $playerId) {
@@ -24,6 +35,7 @@ export const CURRENT_GAMES_QUERY = gql`
 	  }
   }
 `;
+
 export const CREATE_INVITATION_MUTATION = gql`
   mutation createInvitation($inviteeUsername: String!, $invitorColor: InvitorColor!) {
   createInvitation(inviteeUsername: $inviteeUsername, invitorColor: $invitorColor) {
@@ -39,11 +51,13 @@ export const CREATE_INVITATION_MUTATION = gql`
   }
 }
 `;
+
 export const DELETE_INVITATION_MUTATION = gql`
   mutation deleteInvitation($invitationId: ID!) {
     deleteInvitation(invitationId: $invitationId)
   }
 `;
+
 export const CREATE_GAME_MUTATION = gql`
   mutation createGame($invitationId: ID!) {
     createGame(invitationId: $invitationId) {

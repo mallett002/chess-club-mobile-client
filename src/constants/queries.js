@@ -15,20 +15,11 @@ export const INVITATIONS_QUERY = gql`
   }
 `;
 
-// Todo: get opponentUsername & playerId for turn in this CURRENT_GAMES_QUERY:
-/*
-  {
-    gameId: ID!
-    playerOne: ID!
-    playerTwo: ID!
-    turn: ID!
-    opponentUsername: String!
-  }
-*/
 export const CURRENT_GAMES_QUERY = gql`
   query GetGames($playerId: ID!){
     getGames(playerId: $playerId) {
       gameId
+      opponentUsername
       playerOne
       playerTwo
       turn

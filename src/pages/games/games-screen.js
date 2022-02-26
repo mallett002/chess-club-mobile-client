@@ -1,6 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import { Text, View, SafeAreaView, StyleSheet, ScrollView } from 'react-native';
 import { useQuery } from '@apollo/client';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import Feather from 'react-native-vector-icons/Feather';
 
 import { AppContext } from '../../utils/context';
 import { CURRENT_GAMES_QUERY } from '../../constants/queries';
@@ -29,11 +31,13 @@ export default function (props) {
   if (loading) {
     return <Loading screen={'Games'} />;
   }
+  const isMyTurn = (game) => game.turn === playerId;
+  const getTurnText = (game) => {
+    if (isMyTurn(game)) {
+      return 'My turn';
+    }
 
-  const getOpponentUsername = (playerOneId, playerTwoId) => {
-    const opponentId = playerOneId === playerId ? playerTwoId : playerOneId;
-
-    return opponentId;
+    return `${game.opponentUsername}'s turn`;
   };
 
   return (
@@ -46,10 +50,23 @@ export default function (props) {
             {
               data && data.getGames && data.getGames.length
                 ? data.getGames.map((game, i) => <View style={styles.gameItem} key={i}>
-                  <Text style={{ color: 'white' }}>{`game ${i + 1}`}</Text>
-                  <Text style={{ paddingLeft: 8, color: 'white' }}>{`opponentPlayerId: ${getOpponentUsername(game.playerOne, game.playerTwo)}`}</Text>
+                  <View style={styles.opponent}>
+                    <Text style={styles.opponentText}>{game.opponentUsername}</Text>
+                    <Text style={{ color: isMyTurn(game) ? RUSSIAN.GREEN : RUSSIAN.LIGHT_SKIN }}>{getTurnText(game)}</Text>
+                  </View>
+                  <TouchableOpacity
+                    // onPress={() => props.navigation.navigate('INVITATION_FORM')}
+                    onPress={() => console.log('Go to the board screen')}
+                    style={styles.goToGameButton}
+                  >
+                    <Feather
+                      name={'arrow-right-circle'}
+                      size={28}
+                      color={RUSSIAN.GREEN}
+                    />
+                  </TouchableOpacity>
                 </View>)
-                : <Text>{"You currently don't have any games"}</Text>
+                : <Text style={styles.noGamesText}>{"You currently don't have any games"}</Text>
             }
           </View>
         </View>
@@ -72,11 +89,10 @@ const styles = StyleSheet.create({
   },
   gamesList: {
     marginTop: 12
-  }, 
+  },
   section: {
     marginBottom: 32,
     marginTop: 12,
-    paddingHorizontal: 8,
   },
   sectionTitle: {
     color: RUSSIAN.LIGHT_GRAY,
@@ -89,6 +105,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 8
+    paddingVertical: 12
+  },
+  opponent: {
+    paddingLeft: 8,
+    width: '70%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  opponentText: {
+    color: RUSSIAN.LIGHT_GRAY,
+  },
+  goToGameButton: {
+    paddingRight: 8
+  },
+  noGamesText: {
+    borderTopColor: RUSSIAN.DARK_GRAY,
+    borderTopWidth: 1,
+    paddingTop: 12,
+    paddingLeft: 8,
+    fontSize: 14,
+    fontWeight: '100',
+    color: RUSSIAN.LIGHT_GRAY
   }
 });

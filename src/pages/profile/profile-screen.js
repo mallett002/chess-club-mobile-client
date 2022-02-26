@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { RUSSIAN } from '../../constants/colors';
 
 import { AppContext } from '../../utils/context';

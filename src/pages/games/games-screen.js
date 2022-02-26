@@ -55,8 +55,7 @@ export default function (props) {
                     <Text style={{ color: isMyTurn(game) ? RUSSIAN.GREEN : RUSSIAN.LIGHT_SKIN }}>{getTurnText(game)}</Text>
                   </View>
                   <TouchableOpacity
-                    // onPress={() => props.navigation.navigate('INVITATION_FORM')}
-                    onPress={() => console.log('Go to the board screen')}
+                    onPress={() => props.navigation.navigate('BOARD')}
                     style={styles.goToGameButton}
                   >
                     <Feather

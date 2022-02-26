@@ -10,6 +10,7 @@ import GamesScreen from './src/pages/games/games-screen';
 import ProfileScreen from './src/pages/profile/profile-screen';
 import InvitationsScreen from './src/pages/invitations/invitations-screen';
 import BottomTab from './src/components/nav/bottom-tab';
+import Board from './src/pages/games/board';
 import { client } from './src/utils/gql-client';
 import { AppContext } from './src/utils/context';
 import { getTokenFromStorage, decodeJwt } from './src/utils/token-utils';
@@ -82,6 +83,7 @@ function App() {
                 <Stack.Screen name="LoggedInTabScreens" component={LoggedInTabScreens} />
                 <Stack.Group screenOptions={{ presentation: 'modal' }}>
                   <Stack.Screen name="INVITATION_FORM" component={InvitationForm} />
+                  <Stack.Screen name="BOARD" component={Board} />
                 </Stack.Group>
               </>
             ) : (

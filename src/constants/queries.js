@@ -58,3 +58,27 @@ export const CREATE_GAME_MUTATION = gql`
       turn
     }
 }`;
+
+export const GET_BOARD_QUERY = gql`
+  query GetBoard($gameId: ID!){
+    getBoard(gameId: $gameId) {
+      gameId
+      moves {
+        color
+        from
+        to
+        flags
+        piece
+        san
+      }
+      playerOne
+      playerTwo
+      positions {
+        type
+        color
+        label
+      }
+      turn
+    }
+  }
+`;

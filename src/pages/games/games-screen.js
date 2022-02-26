@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   },
   opponent: {
     paddingLeft: 8,
-    width: '70%',
+    width: '80%',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

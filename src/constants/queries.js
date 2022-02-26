@@ -14,16 +14,19 @@ export const INVITATIONS_QUERY = gql`
     }
   }
 `;
+
 export const CURRENT_GAMES_QUERY = gql`
   query GetGames($playerId: ID!){
     getGames(playerId: $playerId) {
       gameId
+      opponentUsername
       playerOne
       playerTwo
       turn
 	  }
   }
 `;
+
 export const CREATE_INVITATION_MUTATION = gql`
   mutation createInvitation($inviteeUsername: String!, $invitorColor: InvitorColor!) {
   createInvitation(inviteeUsername: $inviteeUsername, invitorColor: $invitorColor) {
@@ -39,11 +42,13 @@ export const CREATE_INVITATION_MUTATION = gql`
   }
 }
 `;
+
 export const DELETE_INVITATION_MUTATION = gql`
   mutation deleteInvitation($invitationId: ID!) {
     deleteInvitation(invitationId: $invitationId)
   }
 `;
+
 export const CREATE_GAME_MUTATION = gql`
   mutation createGame($invitationId: ID!) {
     createGame(invitationId: $invitationId) {

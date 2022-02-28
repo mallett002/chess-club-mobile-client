@@ -28,28 +28,26 @@ function Board(props) {
 
   return (
     <View style={styles.wrapper}>
-      <View style={styles.headerContainer}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={{ marginRight: 16 }}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Feather
-              name={'x'}
-              size={28}
-              color={RUSSIAN.GRAY}
-            />
-          </TouchableOpacity>
-          <Text style={styles.title}>{`Game against someone`}</Text>
-        </View>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={{ marginRight: 16 }}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Feather
+            name={'x'}
+            size={28}
+            color={RUSSIAN.GRAY}
+          />
+        </TouchableOpacity>
+        <Text style={styles.title}>{`Game against someone`}</Text>
       </View>
       <View style={styles.gameStatus}>
         <Text style={styles.oponentText}>{`My turn`}</Text>
         {
           status !== 'CHECK' &&
-            <View style={styles.gameAlert}>
-              <Text style={styles.alertText}>{'Check!'}</Text>
-            </View>
+          <View style={styles.gameAlert}>
+            <Text style={styles.alertText}>{'Check!'}</Text>
+          </View>
         }
       </View>
       {/* <Board />
@@ -69,7 +67,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 24,
-    marginBottom: 16
+    marginBottom: 28
   },
   title: {
     fontSize: 24,

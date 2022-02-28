@@ -78,6 +78,7 @@ export const GET_BOARD_QUERY = gql`
         color
         label
       }
+      status
       turn
     }
   }

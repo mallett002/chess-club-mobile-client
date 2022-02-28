@@ -3,6 +3,8 @@ export default {
   BASE: '#2F4454',
   DARK_HIGHLIGHT: '#2E151B',
   HIGHLIGHT: '#DA7B93',
+  DARK_ORANGE: '#c86138',
+  LIGHT_PEACH: '#ffcdb9',
   COOL_HIGHLIGHT: '#376E6F',
   DARK_BASE: '#1C3334',
   WHITE: '#FFFFFF',

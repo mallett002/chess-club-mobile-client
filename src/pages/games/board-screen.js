@@ -1,18 +1,18 @@
 import React, { useContext, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import colors, { RUSSIAN } from '../../constants/colors';
 import { GET_BOARD_QUERY } from '../../constants/queries';
 import Loading from '../../components/loading';
+import { AppContext } from '../../utils/context';
+import Board from '../../components/board';
 
-// import { AppContext } from '../../utils/context';
-// import { removeTokenFromStorage } from '../../utils/token-utils';
-// import Loading from '../../components/loading';
-
-function Board(props) {
+// PlayerOne = 'white'
+function BoardScreen(props) {
+  const { playerId } = useContext(AppContext);
   const [moves, setMoves] = useState(null);
   const [validMoves, setValidMoves] = useState(null);
   const [selectedCell, select] = useState(null);
@@ -24,10 +24,17 @@ function Board(props) {
   }
 
   console.log(data);
-  const { status, playerOne, playerTwo, turn } = data.getBoard;
+  const { status, playerOne, playerTwo, turn, opponentUsername, positions } = data.getBoard;
+  const getTurnText = () => {
+    if (playerId === turn) {
+      return 'My turn';
+    }
+
+    return `${opponentUsername}'s turn`
+  };
 
   return (
-    <View style={styles.wrapper}>
+    <SafeAreaView style={styles.wrapper}>
       <View style={styles.header}>
         <TouchableOpacity
           style={{ marginRight: 16 }}
@@ -39,10 +46,10 @@ function Board(props) {
             color={RUSSIAN.GRAY}
           />
         </TouchableOpacity>
-        <Text style={styles.title}>{`Game against someone`}</Text>
+        <Text style={styles.title}>{`Game against ${opponentUsername}`}</Text>
       </View>
       <View style={styles.gameStatus}>
-        <Text style={styles.oponentText}>{`My turn`}</Text>
+        <Text style={styles.oponentText}>{getTurnText()}</Text>
         {
           status !== 'CHECK' &&
           <View style={styles.gameAlert}>
@@ -50,9 +57,9 @@ function Board(props) {
           </View>
         }
       </View>
-      {/* <Board />
-      <GameActions /> */}
-    </View>
+      <Board positions={positions} />
+      {/* <GameActions /> */}
+    </SafeAreaView>
   );
 }
 
@@ -95,4 +102,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Board;
+export default BoardScreen;

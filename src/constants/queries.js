@@ -71,6 +71,7 @@ export const GET_BOARD_QUERY = gql`
         piece
         san
       }
+      opponentUsername
       playerOne
       playerTwo
       positions {

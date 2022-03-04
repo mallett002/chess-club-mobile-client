@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Dimensions } from 'react-native';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-// import { PIECES, fileToIndex } from '../../constants/board-helpers';
+import { PIECES, fileToIndex } from '../../constants/board-helpers';
 import colors, {RUSSIAN} from '../../constants/colors';
 
 const cellWidth = (Dimensions.get('window').width) / 8;
@@ -9,27 +9,26 @@ const cellWidth = (Dimensions.get('window').width) / 8;
 const getFile = (str) => str.match(/\w/)[0];
 const getRank = (str) => str.match(/(\d)/)[0];
 
-// const getBackgroundColor = (label, isSelected) => {
-//   if (isSelected) {
-//     return 'green';
-//   }
+const getBackgroundColor = (label, isSelected) => {
+  if (isSelected) {
+    return 'green';
+  }
 
-//   const file = getFile(label);
-//   const rank = parseInt(getRank(label), 10);
-//   const fileIndex = parseInt(fileToIndex[file], 10);
-//   const isDark = (rank + fileIndex - 1) % 2 === 0;
+  const file = getFile(label);
+  const rank = parseInt(getRank(label), 10);
+  const fileIndex = parseInt(fileToIndex[file], 10);
+  const isDark = (rank + fileIndex - 1) % 2 === 0;
 
-//   if (isDark) {
-//     return RUSSIAN.DARK_SKIN;
-//   }
+  if (isDark) {
+    return RUSSIAN.DARK_SKIN;
+  }
 
-//   return RUSSIAN.LIGHT_SKIN
-// };
+  return RUSSIAN.LIGHT_SKIN
+};
 
 const generateCellStyle = (label, isSelected, destinationStyles) => {
   const styles = {
-    // backgroundColor: getBackgroundColor(label, isSelected),
-    backgroundColor: 'blue',
+    backgroundColor: getBackgroundColor(label, isSelected),
     height: cellWidth,
     width: cellWidth,
     ...destinationStyles
@@ -39,7 +38,6 @@ const generateCellStyle = (label, isSelected, destinationStyles) => {
 };
 
 const Cell = ({ isSelected, cell, onPress, destinationStyles}) => {
-  console.log({cell});
   return (
     <View>
       <TouchableOpacity

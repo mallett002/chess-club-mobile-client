@@ -10,7 +10,24 @@ import Loading from '../../components/loading';
 import { AppContext } from '../../utils/context';
 import Board from '../../components/board';
 
-// PlayerOne = 'white'
+function getBoardPositions(positions, playerOne, playerId) {
+  if (playerOne === playerId) {
+    return positions;
+  }
+
+  let newPositions = [...positions];
+
+  return newPositions.reverse();
+}
+
+function getTurnText(playerId, turn, opponentUsername) {
+  if (playerId === turn) {
+    return 'My turn';
+  }
+
+  return `${opponentUsername}'s turn`;
+}
+
 function BoardScreen(props) {
   const { playerId } = useContext(AppContext);
   const [moves, setMoves] = useState(null);
@@ -25,13 +42,7 @@ function BoardScreen(props) {
 
   console.log(data);
   const { status, playerOne, playerTwo, turn, opponentUsername, positions } = data.getBoard;
-  const getTurnText = () => {
-    if (playerId === turn) {
-      return 'My turn';
-    }
-
-    return `${opponentUsername}'s turn`
-  };
+  const boardPositions = getBoardPositions(positions, playerOne, playerId);
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -49,7 +60,7 @@ function BoardScreen(props) {
         <Text style={styles.title}>{`Game against ${opponentUsername}`}</Text>
       </View>
       <View style={styles.gameStatus}>
-        <Text style={styles.oponentText}>{getTurnText()}</Text>
+        <Text style={styles.oponentText}>{getTurnText(playerId, turn, opponentUsername)}</Text>
         {
           status !== 'CHECK' &&
           <View style={styles.gameAlert}>
@@ -57,7 +68,7 @@ function BoardScreen(props) {
           </View>
         }
       </View>
-      <Board positions={positions} />
+      <Board positions={boardPositions} />
       {/* <GameActions /> */}
     </SafeAreaView>
   );

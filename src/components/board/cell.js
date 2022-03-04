@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, Dimensions } from 'react-native';
-// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { PIECES, fileToIndex } from '../../constants/board-helpers';
 import colors, {RUSSIAN} from '../../constants/colors';
 
@@ -43,11 +43,11 @@ const Cell = ({ isSelected, cell, onPress, destinationStyles}) => {
       <TouchableOpacity
         onPress={async () => await onPress(cell.label)}
         style={generateCellStyle(cell.label, isSelected, destinationStyles)}>
-        {/* {cell && cell.type && <Icon
+        {cell && cell.type && <Icon
           color={cell.color === 'b' ? colors.BLACK_PIECE : colors.WHITE_PIECE}
           name={PIECES[cell.type]}
           size={cellWidth}
-        />} */}
+        />}
       </TouchableOpacity>
     </View>
   );

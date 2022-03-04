@@ -9,6 +9,8 @@ export default {
   DARK_BASE: '#1C3334',
   DARK_CELL: '#778c58',
   LIGHT_CELL: '#e2e2ca',
+  BLACK_PIECE: '#211806',
+  WHITE_PIECE: '#fff8eb',
   WHITE: '#FFFFFF',
   GRAY: '#CCCCCC'
 };

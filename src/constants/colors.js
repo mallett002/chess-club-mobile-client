@@ -7,6 +7,8 @@ export default {
   LIGHT_PEACH: '#ffcdb9',
   COOL_HIGHLIGHT: '#376E6F',
   DARK_BASE: '#1C3334',
+  DARK_CELL: '#778c58',
+  LIGHT_CELL: '#e2e2ca',
   WHITE: '#FFFFFF',
   GRAY: '#CCCCCC'
 };

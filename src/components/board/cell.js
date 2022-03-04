@@ -11,7 +11,7 @@ const getRank = (str) => str.match(/(\d)/)[0];
 
 const getBackgroundColor = (label, isSelected) => {
   if (isSelected) {
-    return 'green';
+    return colors.LIGHT;
   }
 
   const file = getFile(label);
@@ -20,10 +20,10 @@ const getBackgroundColor = (label, isSelected) => {
   const isDark = (rank + fileIndex - 1) % 2 === 0;
 
   if (isDark) {
-    return RUSSIAN.DARK_SKIN;
+    return colors.DARK_CELL;
   }
 
-  return RUSSIAN.LIGHT_SKIN
+  return colors.LIGHT_CELL;
 };
 
 const generateCellStyle = (label, isSelected, destinationStyles) => {

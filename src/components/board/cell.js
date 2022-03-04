@@ -31,10 +31,20 @@ const generateCellStyle = (label, isSelected, destinationStyles) => {
     backgroundColor: getBackgroundColor(label, isSelected),
     height: cellWidth,
     width: cellWidth,
+    justifyContent: 'center',
+    alignItems: 'center',
     ...destinationStyles
   };
 
   return styles;
+};
+
+const getPieceSize = (piece) => {
+  if (piece === 'p') {
+    return cellWidth - 8;
+  }
+
+  return cellWidth - 3;
 };
 
 const Cell = ({ isSelected, cell, onPress, destinationStyles}) => {
@@ -46,7 +56,7 @@ const Cell = ({ isSelected, cell, onPress, destinationStyles}) => {
         {cell && cell.type && <Icon
           color={cell.color === 'b' ? colors.BLACK_PIECE : colors.WHITE_PIECE}
           name={PIECES[cell.type]}
-          size={cellWidth}
+          size={getPieceSize(cell.type)}
         />}
       </TouchableOpacity>
     </View>

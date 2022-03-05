@@ -47,11 +47,15 @@ const getPieceSize = (piece) => {
   return cellWidth - 3;
 };
 
-const Cell = ({ isSelected, cell, onPress, destinationStyles}) => {
+const Cell = ({ isSelected, cell, onPress, destinationStyles, playersTurn}) => {
   return (
     <View>
       <TouchableOpacity
-        onPress={async () => await onPress(cell.label)}
+        disabled={!playersTurn}
+        onPress={async () => {
+          // check if it's one of my pieces, and there's actually a piece there:
+          await onPress(cell.label)
+        }}
         style={generateCellStyle(cell.label, isSelected, destinationStyles)}>
         {cell && cell.type && <Icon
           color={cell.color === 'b' ? colors.BLACK_PIECE : colors.WHITE_PIECE}

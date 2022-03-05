@@ -24,16 +24,11 @@ function BoardScreen(props) {
   const { data, error, loading: loadingBoard } = useQuery(GET_BOARD_QUERY, { variables: { gameId } });
   const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
 
-  console.log({
-    updateBoardData,
-    updateBoardError
-  });
-
   if (loadingBoard) {
     return <Loading screen={'Board'} />
   }
 
-  const { status, moves, turn, opponentUsername, positions } = data.getBoard;
+  const { status, moves, turn, opponentUsername, positions, playerOne } = data.getBoard;
   const updateBoard = (cell) => updateBoardMutation({
     variables: {
       gameId,
@@ -67,6 +62,7 @@ function BoardScreen(props) {
       </View>
       <View style={styles.fallenSoldiers}></View>
       <Board
+        playersTurn={turn === playerId}
         updateBoard={updateBoard}
         positions={positions}
         moves={moves}

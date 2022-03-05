@@ -4,46 +4,50 @@ import { View, FlatList } from 'react-native';
 import colors from '../../constants/colors';
 import Cell from './cell';
 
-function Board({ positions, moves: serverMoves, updateBoard, gameId }) {
+function Board({ positions, moves: serverMoves, updateBoard, playersTurn }) {
   const [moves, setMoves] = useState(null);
   const [validMoves, setValidMoves] = useState(null);
   const [selectedCell, setSelectedCell] = useState(null);
 
   useEffect(() => {
-    let movesList = null;
-    const validMovesLookup = {};
+    if (playersTurn) {
+      let movesList = null;
+      const validMovesLookup = {};
 
-    if (serverMoves) {
-      movesList = serverMoves;
-      for (move of serverMoves) {
-        if (!validMovesLookup[move.from]) {
-          validMovesLookup[move.from] = new Set();
+      if (serverMoves) {
+        movesList = serverMoves;
+        for (move of serverMoves) {
+          if (!validMovesLookup[move.from]) {
+            validMovesLookup[move.from] = new Set();
+          }
+
+          validMovesLookup[move.from].add(move.to);
         }
-
-        validMovesLookup[move.from].add(move.to);
       }
-    }
 
-    setMoves(movesList);
-    setValidMoves(validMovesLookup);
+      setMoves(movesList);
+      setValidMoves(validMovesLookup);
+    }
   }, [positions, serverMoves]);
 
   const onCellSelect = async (newCell) => {
-    let label = null;
+    if (playersTurn) {
+      let label = null;
 
-    if (selectedCell) {
-      if (newCell !== selectedCell && validMoves[selectedCell].has(newCell)) {
-        const toCell = newCell;
-        const fromCell = selectedCell;
-        const moveToCellDomain = moves.find((cellMove) => cellMove.from === fromCell && cellMove.to === toCell);
+      if (selectedCell) {
+        if (newCell !== selectedCell && validMoves[selectedCell].has(newCell)) {
+          const toCell = newCell;
+          const fromCell = selectedCell;
+          const moveToCellDomain = moves.find((cellMove) => cellMove.from === fromCell && cellMove.to === toCell);
 
-        await updateBoard(moveToCellDomain.san);
+          await updateBoard(moveToCellDomain.san);
+        }
+      } else {
+        label = newCell;
       }
-    } else {
-      label = newCell;
-    }
 
-    setSelectedCell(label);
+      setSelectedCell(label);
+    }
   };
 
   const renderItem = ({ item }) => {
@@ -62,6 +66,7 @@ function Board({ positions, moves: serverMoves, updateBoard, gameId }) {
 
     return (
       <Cell
+        playersTurn={playersTurn}
         isSelected={isSelected}
         cell={item}
         destinationStyles={styles}

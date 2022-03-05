@@ -5,20 +5,10 @@ import Feather from 'react-native-vector-icons/Feather';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import colors, { RUSSIAN } from '../../constants/colors';
-import { GET_BOARD_QUERY } from '../../constants/queries';
+import { GET_BOARD_QUERY, UPDATE_BOARD_MUTATION } from '../../constants/queries';
 import Loading from '../../components/loading';
 import { AppContext } from '../../utils/context';
 import Board from '../../components/board';
-
-function getBoardPositions(positions, playerOne, playerId) {
-  if (playerOne === playerId) {
-    return positions;
-  }
-
-  let newPositions = [...positions];
-
-  return newPositions.reverse();
-}
 
 function getTurnText(playerId, turn, opponentUsername) {
   if (playerId === turn) {
@@ -30,19 +20,26 @@ function getTurnText(playerId, turn, opponentUsername) {
 
 function BoardScreen(props) {
   const { playerId } = useContext(AppContext);
-  const [moves, setMoves] = useState(null);
-  const [validMoves, setValidMoves] = useState(null);
-  const [selectedCell, select] = useState(null);
   const { gameId } = props.route.params;
   const { data, error, loading: loadingBoard } = useQuery(GET_BOARD_QUERY, { variables: { gameId } });
+  const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
+
+  console.log({
+    updateBoardData,
+    updateBoardError
+  });
 
   if (loadingBoard) {
     return <Loading screen={'Board'} />
   }
 
-  console.log(data);
-  const { status, playerOne, playerTwo, turn, opponentUsername, positions } = data.getBoard;
-  const boardPositions = getBoardPositions(positions, playerOne, playerId);
+  const { status, moves, turn, opponentUsername, positions } = data.getBoard;
+  const updateBoard = (cell) => updateBoardMutation({
+    variables: {
+      gameId,
+      cell
+    }
+  });
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -68,7 +65,12 @@ function BoardScreen(props) {
           </View>
         }
       </View>
-      <Board positions={boardPositions} />
+      <Board
+        updateBoard={updateBoard}
+        positions={positions}
+        moves={moves}
+        gameId={gameId}
+      />
       {/* <GameActions /> */}
     </SafeAreaView>
   );

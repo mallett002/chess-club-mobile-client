@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { Text, View, StyleSheet, FlatList } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, FlatList } from 'react-native';
 
-import colors, { RUSSIAN } from '../../constants/colors';
+import colors from '../../constants/colors';
 import Cell from './cell';
 
-function Board({ positions, moves: serverMoves }) {
+function Board({ positions, moves: serverMoves, updateBoard, gameId }) {
   const [moves, setMoves] = useState(null);
   const [validMoves, setValidMoves] = useState(null);
   const [selectedCell, setSelectedCell] = useState(null);
-  // const { gameId } = route.params;
-  // const [ movePieceMutation, { data: movePieceData, error: movePieceError } ] = useMutation(MOVE_PIECE_MUTATION);
 
   useEffect(() => {
     let movesList = null;
@@ -40,14 +35,9 @@ function Board({ positions, moves: serverMoves }) {
       if (newCell !== selectedCell && validMoves[selectedCell].has(newCell)) {
         const toCell = newCell;
         const fromCell = selectedCell;
-        const moveToCellDomain = serverMoves.find((cellMove) => cellMove.from === fromCell && cellMove.to === toCell);
+        const moveToCellDomain = moves.find((cellMove) => cellMove.from === fromCell && cellMove.to === toCell);
 
-        // await movePieceMutation({
-        //   variables: {
-        //     gameId,
-        //     cell: moveToCellDomain.san
-        //   }
-        // });
+        await updateBoard(moveToCellDomain.san);
       }
     } else {
       label = newCell;
@@ -81,7 +71,7 @@ function Board({ positions, moves: serverMoves }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <View>
       <FlatList
         numColumns={8}
         data={positions}
@@ -92,11 +82,5 @@ function Board({ positions, moves: serverMoves }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    // marginTop: 40
-  }
-});
 
 export default Board;

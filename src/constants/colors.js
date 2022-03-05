@@ -6,6 +6,8 @@ export default {
   DARK_ORANGE: '#c86138',
   LIGHT_PEACH: '#ffcdb9',
   COOL_HIGHLIGHT: '#376E6F',
+  SELECTED_CELL: '#e8bd23',
+  DESTINATION_CELL: '#41a36d',
   DARK_BASE: '#1C3334',
   DARK_CELL: '#557765',
   LIGHT_CELL: '#b1b1a3',

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { PIECES, fileToIndex } from '../../constants/board-helpers';
-import colors, {RUSSIAN} from '../../constants/colors';
+import colors from '../../constants/colors';
 
 const cellWidth = (Dimensions.get('window').width) / 8;
 
@@ -11,7 +11,7 @@ const getRank = (str) => str.match(/(\d)/)[0];
 
 const getBackgroundColor = (label, isSelected) => {
   if (isSelected) {
-    return colors.LIGHT;
+    return colors.SELECTED_CELL;
   }
 
   const file = getFile(label);

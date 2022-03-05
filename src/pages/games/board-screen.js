@@ -59,18 +59,20 @@ function BoardScreen(props) {
       <View style={styles.gameStatus}>
         <Text style={styles.oponentText}>{getTurnText(playerId, turn, opponentUsername)}</Text>
         {
-          status !== 'CHECK' &&
+          status === 'CHECK' &&
           <View style={styles.gameAlert}>
             <Text style={styles.alertText}>{'Check!'}</Text>
           </View>
         }
       </View>
+      <View style={styles.fallenSoldiers}></View>
       <Board
         updateBoard={updateBoard}
         positions={positions}
         moves={moves}
         gameId={gameId}
       />
+      <View style={styles.fallenSoldiers}></View>
       {/* <GameActions /> */}
     </SafeAreaView>
   );
@@ -87,7 +89,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 24,
-    marginBottom: 28
+    marginBottom: 16
   },
   title: {
     fontSize: 24,
@@ -95,23 +97,27 @@ const styles = StyleSheet.create({
   },
   oponentText: {
     color: RUSSIAN.LIGHT_GRAY,
-    marginBottom: 16,
     paddingHorizontal: 12
+  },
+  gameStatus: {
+    minHeight: 70,
   },
   gameAlert: {
     borderWidth: 2,
     borderColor: colors.DARK_ORANGE,
     backgroundColor: colors.LIGHT_PEACH,
     paddingVertical: 8,
-    paddingHorizontal: 6,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8
   },
   alertText: {
     color: colors.DARK_ORANGE,
     fontSize: 20
+  },
+  fallenSoldiers: {
+    height: 40,
+    backgroundColor: RUSSIAN.DARK_GRAY
   }
 });
 

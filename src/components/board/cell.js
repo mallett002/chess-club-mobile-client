@@ -47,14 +47,13 @@ const getPieceSize = (piece) => {
   return cellWidth - 3;
 };
 
-const Cell = ({ isSelected, cell, onPress, destinationStyles, playersTurn}) => {
+const Cell = ({ isSelected, cell, onPress, destinationStyles, disabled}) => {
   return (
     <View>
       <TouchableOpacity
-        disabled={!playersTurn}
+        disabled={disabled}
         onPress={async () => {
-          // check if it's one of my pieces, and there's actually a piece there:
-          await onPress(cell.label)
+          await onPress(cell.label);
         }}
         style={generateCellStyle(cell.label, isSelected, destinationStyles)}>
         {cell && cell.type && <Icon

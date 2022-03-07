@@ -4,7 +4,7 @@ import { View, FlatList } from 'react-native';
 import colors from '../../constants/colors';
 import Cell from './cell';
 
-function Board({ positions, moves: serverMoves, updateBoard, playersTurn }) {
+function Board({ positions, moves: serverMoves, updateBoard, playersTurn, playerColor }) {
   const [moves, setMoves] = useState(null);
   const [validMoves, setValidMoves] = useState(null);
   const [selectedCell, setSelectedCell] = useState(null);
@@ -64,9 +64,11 @@ function Board({ positions, moves: serverMoves, updateBoard, playersTurn }) {
       }
     }
 
+    const disabled = !playersTurn || item.color !== playerColor;
+
     return (
       <Cell
-        playersTurn={playersTurn}
+        disabled={disabled}
         isSelected={isSelected}
         cell={item}
         destinationStyles={styles}

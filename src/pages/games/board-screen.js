@@ -21,7 +21,10 @@ function getTurnText(playerId, turn, opponentUsername) {
 function BoardScreen(props) {
   const { playerId } = useContext(AppContext);
   const { gameId } = props.route.params;
-  const { data, error, loading: loadingBoard } = useQuery(GET_BOARD_QUERY, { variables: { gameId } });
+  const { data, error, loading: loadingBoard } = useQuery(GET_BOARD_QUERY, {
+    variables: { gameId },
+    fetchPolicy: 'cache-and-network'
+  });
   const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
 
   if (loadingBoard) {
@@ -62,6 +65,7 @@ function BoardScreen(props) {
       </View>
       <View style={styles.fallenSoldiers}></View>
       <Board
+        playerColor={playerOne === playerId ? 'w' : 'b'}
         playersTurn={turn === playerId}
         updateBoard={updateBoard}
         positions={positions}

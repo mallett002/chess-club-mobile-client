@@ -27,6 +27,30 @@ export const CURRENT_GAMES_QUERY = gql`
   }
 `;
 
+export const UPDATE_BOARD_MUTATION = gql`
+  mutation updateBoard($gameId: ID!, $cell: String!) {
+      updateBoard(gameId: $gameId, cell: $cell) {
+        gameId
+        playerOne
+        playerTwo
+        turn
+        moves {
+          color
+          from
+          to
+          flags
+          piece
+          san
+        }
+        positions {
+          type
+          color
+          label
+        }
+      }
+    }
+`;
+
 export const CREATE_INVITATION_MUTATION = gql`
   mutation createInvitation($inviteeUsername: String!, $invitorColor: InvitorColor!) {
   createInvitation(inviteeUsername: $inviteeUsername, invitorColor: $invitorColor) {
@@ -58,3 +82,29 @@ export const CREATE_GAME_MUTATION = gql`
       turn
     }
 }`;
+
+export const GET_BOARD_QUERY = gql`
+  query GetBoard($gameId: ID!){
+    getBoard(gameId: $gameId) {
+      gameId
+      moves {
+        color
+        from
+        to
+        flags
+        piece
+        san
+      }
+      opponentUsername
+      playerOne
+      playerTwo
+      positions {
+        type
+        color
+        label
+      }
+      status
+      turn
+    }
+  }
+`;

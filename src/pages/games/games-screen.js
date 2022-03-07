@@ -55,8 +55,7 @@ export default function (props) {
                     <Text style={{ color: isMyTurn(game) ? RUSSIAN.GREEN : RUSSIAN.LIGHT_SKIN }}>{getTurnText(game)}</Text>
                   </View>
                   <TouchableOpacity
-                    // onPress={() => props.navigation.navigate('INVITATION_FORM')}
-                    onPress={() => console.log('Go to the board screen')}
+                    onPress={() => props.navigation.navigate('BOARD', { gameId: game.gameId })}
                     style={styles.goToGameButton}
                   >
                     <Feather
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
   },
   opponent: {
     paddingLeft: 8,
-    width: '70%',
+    width: '80%',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

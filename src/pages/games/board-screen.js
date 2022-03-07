@@ -29,6 +29,7 @@ function BoardScreen(props) {
   const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
   const [boardPositions, setBoardPositions] = useState([]);
 
+  // Might be able to just use the apollo cache instead of this state field
   useEffect(() => {
     setBoardPositions(getBoardData.getBoard.positions);
 

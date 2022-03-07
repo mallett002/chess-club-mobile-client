@@ -9,6 +9,7 @@ import { GET_BOARD_QUERY, UPDATE_BOARD_MUTATION } from '../../constants/queries'
 import Loading from '../../components/loading';
 import { AppContext } from '../../utils/context';
 import Board from '../../components/board';
+import { useEffect } from 'react/cjs/react.production.min';
 
 function getTurnText(playerId, turn, opponentUsername) {
   if (playerId === turn) {
@@ -21,17 +22,29 @@ function getTurnText(playerId, turn, opponentUsername) {
 function BoardScreen(props) {
   const { playerId } = useContext(AppContext);
   const { gameId } = props.route.params;
-  const { data, error, loading: loadingBoard } = useQuery(GET_BOARD_QUERY, {
+  const { data: getBoardData, error, loading: loadingBoard } = useQuery(GET_BOARD_QUERY, {
     variables: { gameId },
     fetchPolicy: 'cache-and-network'
   });
   const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
+  const [boardPositions, setBoardPositions] = useState([]);
+
+  useEffect(() => {
+    setBoardPositions(getBoardData.getBoard.positions);
+
+  }, [updateBoardData, getBoardData]);
 
   if (loadingBoard) {
     return <Loading screen={'Board'} />
   }
 
-  const { status, moves, turn, opponentUsername, positions, playerOne } = data.getBoard;
+
+  // Maybe store board in a use reducer. Show that. Call update board mutation when they confirm move
+  console.log(JSON.stringify(getBoardData.getBoard));
+
+  const { status, moves, turn, opponentUsername, positions, playerOne } = getBoardData.getBoard;
+
+  // This will get passed to GameActions for confirm move
   const updateBoard = (cell) => updateBoardMutation({
     variables: {
       gameId,
@@ -68,7 +81,7 @@ function BoardScreen(props) {
         playerColor={playerOne === playerId ? 'w' : 'b'}
         playersTurn={turn === playerId}
         updateBoard={updateBoard}
-        positions={positions}
+        positions={boardPositions}
         moves={moves}
         gameId={gameId}
       />

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -9,7 +9,7 @@ import { GET_BOARD_QUERY, UPDATE_BOARD_MUTATION } from '../../constants/queries'
 import Loading from '../../components/loading';
 import { AppContext } from '../../utils/context';
 import Board from '../../components/board';
-import { useEffect } from 'react/cjs/react.production.min';
+import GameActions from '../../components/board/game-actions';
 
 function getTurnText(playerId, turn, opponentUsername) {
   if (playerId === turn) {
@@ -24,28 +24,24 @@ function BoardScreen(props) {
   const { gameId } = props.route.params;
   const { data: getBoardData, error, loading: loadingBoard } = useQuery(GET_BOARD_QUERY, {
     variables: { gameId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-first'
   });
   const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
   const [boardPositions, setBoardPositions] = useState([]);
-
-  // Might be able to just use the apollo cache instead of this state field
+  const [pendingMove, setPendingMove] = useState('');
+  // TODO: Move the piece to the pending move position in state
+  //       Then, call the mutation with the pending move when accept
   useEffect(() => {
-    setBoardPositions(getBoardData.getBoard.positions);
+    if (getBoardData && getBoardData.getBoard) {
+      setBoardPositions(getBoardData.getBoard.positions);
+    }
+  }, [getBoardData, updateBoardData]);
 
-  }, [updateBoardData, getBoardData]);
-
-  if (loadingBoard) {
+  if (!boardPositions.length) {
     return <Loading screen={'Board'} />
   }
 
-
-  // Maybe store board in a use reducer. Show that. Call update board mutation when they confirm move
-  console.log(JSON.stringify(getBoardData.getBoard));
-
   const { status, moves, turn, opponentUsername, positions, playerOne } = getBoardData.getBoard;
-
-  // This will get passed to GameActions for confirm move
   const updateBoard = (cell) => updateBoardMutation({
     variables: {
       gameId,
@@ -79,6 +75,7 @@ function BoardScreen(props) {
       </View>
       <View style={styles.fallenSoldiers}></View>
       <Board
+        setPendingMove={setPendingMove}
         playerColor={playerOne === playerId ? 'w' : 'b'}
         playersTurn={turn === playerId}
         updateBoard={updateBoard}
@@ -87,7 +84,14 @@ function BoardScreen(props) {
         gameId={gameId}
       />
       <View style={styles.fallenSoldiers}></View>
-      {/* <GameActions /> */}
+      {
+        pendingMove ?
+        <GameActions
+          exitMove={() => setPendingMove('')}
+          updateBoard={() => updateBoard(pendingMove)}
+        /> : null
+      }
+
     </SafeAreaView>
   );
 }

@@ -4,7 +4,7 @@ import { View, FlatList } from 'react-native';
 import colors from '../../constants/colors';
 import Cell from './cell';
 
-function Board({ positions, moves: serverMoves, updateBoard, playersTurn, playerColor }) {
+function Board({ positions, moves: serverMoves, playersTurn, playerColor, setPendingMove }) {
   const [moves, setMoves] = useState(null);
   const [validMoves, setValidMoves] = useState(null);
   const [selectedCell, setSelectedCell] = useState(null);
@@ -30,7 +30,7 @@ function Board({ positions, moves: serverMoves, updateBoard, playersTurn, player
     }
   }, [positions, serverMoves]);
 
-  const onCellSelect = async (newCell) => {
+  const onCellSelect = (newCell) => {
     if (playersTurn) {
       let label = null;
 
@@ -40,7 +40,7 @@ function Board({ positions, moves: serverMoves, updateBoard, playersTurn, player
           const fromCell = selectedCell;
           const moveToCellDomain = moves.find((cellMove) => cellMove.from === fromCell && cellMove.to === toCell);
 
-          await updateBoard(moveToCellDomain.san);
+          setPendingMove(moveToCellDomain.san);
         }
       } else {
         label = newCell;

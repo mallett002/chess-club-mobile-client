@@ -48,6 +48,15 @@ function BoardScreen(props) {
       cell
     }
   });
+  const updatePosition = (newCell) => {
+    // Get the index of the new cell postion
+    // put that piece at the new position
+    const newCellIndex = boardPositions.indexOf(newCell.label);
+    const newPositions = boardPositions.slice(0);
+    newPositions[newCellIndex] = newCell;
+    // this isn't updating the position on the board... vv
+    setBoardPositions(newPositions);
+  };
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -75,6 +84,7 @@ function BoardScreen(props) {
       </View>
       <View style={styles.fallenSoldiers}></View>
       <Board
+        updatePosition={updatePosition}
         setPendingMove={setPendingMove}
         playerColor={playerOne === playerId ? 'w' : 'b'}
         playersTurn={turn === playerId}

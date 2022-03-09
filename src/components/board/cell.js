@@ -53,8 +53,8 @@ const Cell = ({ isSelected, cell, onPress, destinationStyles, disabled}) => {
     <View>
       <TouchableOpacity
         disabled={disabled}
-        onPress={async () => {
-          await onPress(cell.label);
+        onPress={() => {
+          onPress(cell)
         }}
         style={generateCellStyle(cell.label, isSelected, destinationStyles)}>
         {cell && cell.type && <Icon

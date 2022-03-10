@@ -59,6 +59,48 @@ function Board({ positions, moves: serverMoves, playersTurn, playerColor, setPen
     }
   };
 
+  const getIsDisabledCell = (newCell) => {
+    // Disabled if:
+      // !playersTurn
+      // item.color !== playerColor (not one of your pieces)
+      // if selectedCell:
+        // !oneOfMoves || !self
+
+  if (!playersTurn) {
+    return true;
+  }
+
+  if (selectedCell) {
+    // 
+    // can select self (to deselect) || move
+      // self: newCell.label === selectedCell
+      // move: validMoves[selectedCell].has(newCell.label)
+      // if (newCell.label === selectedCell || validMoves[selectedCell].has(newCell.label)) {
+      //   return false;
+      // }
+
+      if (validMoves[selectedCell].has(newCell.label)) {
+        return false;
+      }
+      
+      if (newCell.label) {
+        if (newCell.color !== playerColor && !validMoves[selectedCell].has(newCell.label)) {
+          return true;
+        }
+
+        if (newCell.color === playerColor && newCell.label !== selectedCell) {
+          return true
+        }
+
+        return validMoves[selectedCell].has(newCell.label);
+      }
+  }
+
+  // not selectedCell
+  // Can only select your pieces
+  return !newCell.color || newCell.color !== playerColor;
+};
+
   const renderItem = ({ item }) => {
     const styles = {};
     let isSelected = false;
@@ -73,17 +115,9 @@ function Board({ positions, moves: serverMoves, playersTurn, playerColor, setPen
       }
     }
 
-    // Fix this. 
-    // const disabled = !playersTurn || item.color !== playerColor;
-    // Disabled if:
-      // !playersTurn
-      // item.color !== playerColor (not one of your pieces)
-      // if selectedCell:
-        // !oneOfMoves || !self
-
     return (
       <Cell
-        disabled={false}
+        disabled={getIsDisabledCell(item)}
         isSelected={isSelected}
         cell={item}
         destinationStyles={styles}

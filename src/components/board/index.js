@@ -32,14 +32,12 @@ function Board({ positions, moves: serverMoves, playersTurn, playerColor, setPen
 
   const onCellSelect = (newCell) => {
     if (playersTurn) {
-      console.log({newCell, selectedCell});
       let label = null;
 
       if (selectedCell) {
-        if (newCell.label !== selectedCell && validMoves[selectedCell].has(newCell.label)) {
+        if (validMoves[selectedCell].has(newCell.label)) {
           // const toCell = newCell.label;
           // const fromCell = selectedCell;
-            // todo: Pull this out to a function: vv
           // const moveToCellDomain = moves.find((cellMove) => cellMove.from === fromCell && cellMove.to === toCell);
 
           // await movePieceMutation({

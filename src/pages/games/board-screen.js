@@ -48,14 +48,27 @@ function BoardScreen(props) {
       cell
     }
   });
+
   const updatePosition = (newCell) => {
-    // Get the index of the new cell postion
-    // put that piece at the new position
-    const newCellIndex = boardPositions.indexOf(newCell.label);
-    const newPositions = boardPositions.slice(0);
-    newPositions[newCellIndex] = newCell;
-    // this isn't updating the position on the board... vv
-    setBoardPositions(newPositions);
+    console.log({newCell});
+    let newCellIndex;
+
+    for (let i = 0; i < boardPositions.length; i++) {
+      const cell = boardPositions[i];
+
+      if (cell.label === newCell.label) {
+        newCellIndex = i;
+        break;
+      }
+    }
+
+    const positionsCopy = boardPositions.slice();
+    console.log({b4: positionsCopy[newCellIndex].type});
+    positionsCopy[newCellIndex] = newCell;
+    console.log({after: positionsCopy[newCellIndex].type});
+
+    // TODO: this isn't updating the position on the board... vv
+    setBoardPositions(positionsCopy);
   };
 
   return (

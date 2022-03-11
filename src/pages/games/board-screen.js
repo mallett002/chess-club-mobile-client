@@ -10,6 +10,7 @@ import Loading from '../../components/loading';
 import { AppContext } from '../../utils/context';
 import Board from '../../components/board';
 import GameActions from '../../components/board/game-actions';
+import {getIndexForLabel} from '../../constants/board-helpers';
 
 function getTurnText(playerId, turn, opponentUsername) {
   if (playerId === turn) {
@@ -29,6 +30,7 @@ function BoardScreen(props) {
   const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
   const [boardPositions, setBoardPositions] = useState([]);
   const [pendingMove, setPendingMove] = useState('');
+  const [selectedCell, setSelectedCell] = useState('');
   // TODO: Move the piece to the pending move position in state
   //       Then, call the mutation with the pending move when accept
   useEffect(() => {
@@ -50,25 +52,27 @@ function BoardScreen(props) {
   });
 
   const updatePosition = (newCell) => {
-    console.log({newCell});
-    let newCellIndex;
+    setBoardPositions((positions) => {
+      const fromCellIndex = getIndexForLabel(boardPositions, selectedCell); // get index of selectedCell
+      const newCellIndex = getIndexForLabel(boardPositions, newCell.label);
+      const selectedCellContents = positions[fromCellIndex];
+      const updatedCellForMove = {
+        label: newCell.label,
+        color: selectedCellContents.color,
+        type: selectedCellContents.type
+      };
+      const oldCellForMove = {
+        label: selectedCellContents.label,
+        color: newCell.color,
+        type: newCell.type
+      };
+      const copy = positions.slice();
 
-    for (let i = 0; i < boardPositions.length; i++) {
-      const cell = boardPositions[i];
+      copy.splice(newCellIndex, 1, updatedCellForMove);
+      copy.splice(fromCellIndex, 1, oldCellForMove);
 
-      if (cell.label === newCell.label) {
-        newCellIndex = i;
-        break;
-      }
-    }
-
-    const positionsCopy = boardPositions.slice();
-    console.log({b4: positionsCopy[newCellIndex].type});
-    positionsCopy[newCellIndex] = newCell;
-    console.log({after: positionsCopy[newCellIndex].type});
-
-    // TODO: this isn't updating the position on the board... vv
-    setBoardPositions(positionsCopy);
+      return copy;
+    });
   };
 
   return (
@@ -103,16 +107,18 @@ function BoardScreen(props) {
         playersTurn={turn === playerId}
         updateBoard={updateBoard}
         positions={boardPositions}
+        selectedCell={selectedCell}
+        setSelectedCell={setSelectedCell}
         moves={moves}
         gameId={gameId}
       />
       <View style={styles.fallenSoldiers}></View>
       {
         pendingMove ?
-        <GameActions
-          exitMove={() => setPendingMove('')}
-          updateBoard={() => updateBoard(pendingMove)}
-        /> : null
+          <GameActions
+            exitMove={() => setPendingMove('')}
+            updateBoard={() => updateBoard(pendingMove)}
+          /> : null
       }
 
     </SafeAreaView>

@@ -4,10 +4,18 @@ import { View, FlatList } from 'react-native';
 import colors from '../../constants/colors';
 import Cell from './cell';
 
-function Board({ positions, moves: serverMoves, playersTurn, playerColor, setPendingMove, updatePosition }) {
+function Board({
+  positions,
+  moves: serverMoves,
+  playersTurn,
+  playerColor,
+  setPendingMove,
+  updatePosition,
+  selectedCell,
+  setSelectedCell
+}) {
   const [moves, setMoves] = useState(null);
   const [validMoves, setValidMoves] = useState(null);
-  const [selectedCell, setSelectedCell] = useState(null);
 
   useEffect(() => {
     if (playersTurn) {

@@ -27,7 +27,8 @@ export const useAuthentication = (data) => {
 };
 
 export async function logInFetch(username, password) {
-  const response = await fetch('http://redacted:4000/login', {
+  // todo: redact
+  const response = await fetch('http://192.168.0.220:4000/login', {
     method: 'POST',
     body: JSON.stringify({
       username,

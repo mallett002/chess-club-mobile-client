@@ -39,29 +39,22 @@ function Board({
   }, [positions, serverMoves]);
 
   const onCellSelect = (newCell) => {
+    // Don't set selectedCell to null if you are setting a pending move.
     if (playersTurn) {
-      let label = null;
-
       if (selectedCell) {
-        if (validMoves[selectedCell].has(newCell.label)) {
-          // const toCell = newCell.label;
-          // const fromCell = selectedCell;
-          // const moveToCellDomain = moves.find((cellMove) => cellMove.from === fromCell && cellMove.to === toCell);
+        if (validMoves[selectedCell].has(newCell.label)) { // if newCell is one of selectedCell's moves
+          const toCell = newCell.label;
+          const fromCell = selectedCell;
+          const pendingMove = moves.find((move) => move.from === fromCell && move.to === toCell);
 
-          // await movePieceMutation({
-          //   variables: {
-          //     gameId,
-          //     cell: moveToCellDomain.san
-          //   }
-          // });
           updatePosition(newCell);
-          setPendingMove(newCell.san);
+          setPendingMove(pendingMove.san);
+        } else if (newCell.label === selectedCell) { // deselecting the selectedCell
+          setSelectedCell(null);
         }
-      } else {
-        label = newCell.label;
+      } else { // There isn't a selectedCell. Set it now.
+        setSelectedCell(newCell.label);
       }
-
-      setSelectedCell(label);
     }
   };
 

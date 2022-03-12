@@ -31,8 +31,7 @@ function BoardScreen(props) {
   const [boardPositions, setBoardPositions] = useState([]);
   const [pendingMove, setPendingMove] = useState('');
   const [selectedCell, setSelectedCell] = useState('');
-  // TODO: Move the piece to the pending move position in state
-  //       Then, call the mutation with the pending move when accept
+
   useEffect(() => {
     if (getBoardData && getBoardData.getBoard) {
       setBoardPositions(getBoardData.getBoard.positions);
@@ -53,14 +52,17 @@ function BoardScreen(props) {
 
   const updatePosition = (newCell) => {
     setBoardPositions((positions) => {
-      const fromCellIndex = getIndexForLabel(boardPositions, selectedCell); // get index of selectedCell
-      const newCellIndex = getIndexForLabel(boardPositions, newCell.label);
+      const fromCellIndex = getIndexForLabel(positions, selectedCell);
+      const newCellIndex = getIndexForLabel(positions, newCell.label);
       const selectedCellContents = positions[fromCellIndex];
+      // The new toCell:
       const updatedCellForMove = {
         label: newCell.label,
         color: selectedCellContents.color,
         type: selectedCellContents.type
       };
+
+      // The new FromCell
       const oldCellForMove = {
         label: selectedCellContents.label,
         color: newCell.color,
@@ -73,6 +75,43 @@ function BoardScreen(props) {
 
       return copy;
     });
+  };
+
+  const cancelPendingMove = () => {
+    // move the piece back to where it was
+      // Move the piece at the pendingMove spot to the selectedCell spot
+      // Move the piece at the selectedCell spot to the pending move spot
+    setBoardPositions((positions) => {
+      const selectedCellIndex = getIndexForLabel(positions, selectedCell);
+      const pendingMoveIndex = getIndexForLabel(positions, pendingMove);
+      console.log({selectedCell, pendingMove});
+  
+      // The new toCell: Where it was, set it back to what was there b4
+      const selectedCellContents = positions[selectedCellIndex];
+      const pendingMoveCellContents = positions[pendingMoveIndex];
+      const restoredMoveToCell = { // Make this the pending move spot. Set it back to empty (what it was). It's now the selectedCell stuff
+        label: selectedCell,
+        color: pendingMoveCellContents.color,
+        type: pendingMoveCellContents.type
+      };
+      const restoredSelectedCell = {
+        label: pendingMoveCellContents.label,
+        color: selectedCellContents.color,
+        type: selectedCellContents.type
+      };
+
+      const copy = positions.slice();
+
+      copy.splice(selectedCellIndex, 1, restoredMoveToCell);
+      copy.splice(pendingMoveIndex, 1, restoredSelectedCell);
+
+      return copy;
+    });
+    
+    // Set the pending move back to ''
+    setPendingMove('');
+    // set the selected piece back to ''
+    setSelectedCell('');
   };
 
   return (
@@ -114,9 +153,9 @@ function BoardScreen(props) {
       />
       <View style={styles.fallenSoldiers}></View>
       {
-        pendingMove ?
+        selectedCell && pendingMove ?
           <GameActions
-            exitMove={() => setPendingMove('')}
+            exitMove={cancelPendingMove}
             updateBoard={() => updateBoard(pendingMove)}
           /> : null
       }

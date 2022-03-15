@@ -7,6 +7,7 @@ import Cell from './cell';
 function Board({
   positions,
   moves: serverMoves,
+  isPendingMove,
   playersTurn,
   playerColor,
   setPendingMove,
@@ -39,27 +40,26 @@ function Board({
   }, [positions, serverMoves]);
 
   const onCellSelect = (newCell) => {
-    // Don't set selectedCell to null if you are setting a pending move.
     if (playersTurn) {
       if (selectedCell) {
-        if (validMoves[selectedCell].has(newCell.label)) { // if newCell is one of selectedCell's moves
+        if (validMoves[selectedCell].has(newCell.label)) {
           const toCell = newCell.label;
           const fromCell = selectedCell;
           const pendingMove = moves.find((move) => move.from === fromCell && move.to === toCell);
 
           updatePosition(newCell);
           setPendingMove(pendingMove.san);
-        } else if (newCell.label === selectedCell) { // deselecting the selectedCell
+        } else if (newCell.label === selectedCell) {
           setSelectedCell(null);
         }
-      } else { // There isn't a selectedCell. Set it now.
+      } else {
         setSelectedCell(newCell.label);
       }
     }
   };
 
   const getIsDisabledCell = (cell) => {
-    if (!playersTurn) {
+    if (!playersTurn || isPendingMove) {
       return true;
     }
 

@@ -124,7 +124,6 @@ function InvitationForm(props) {
                 <Text style={{ color: RUSSIAN.WHITE }}>{'Cancel'}</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                disabled={false}
                 disabled={isSubmitting || !values.username || Object.keys(errors).length}
                 style={getSubmitButtonStyles(values, errors, isSubmitting)}
                 type="submit"

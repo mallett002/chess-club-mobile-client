@@ -4,10 +4,19 @@ import { View, FlatList } from 'react-native';
 import colors from '../../constants/colors';
 import Cell from './cell';
 
-function Board({ positions, moves: serverMoves, updateBoard, playersTurn, playerColor }) {
+function Board({
+  positions,
+  moves: serverMoves,
+  isPendingMove,
+  playersTurn,
+  playerColor,
+  setPendingMove,
+  updatePosition,
+  selectedCell,
+  setSelectedCell
+}) {
   const [moves, setMoves] = useState(null);
   const [validMoves, setValidMoves] = useState(null);
-  const [selectedCell, setSelectedCell] = useState(null);
 
   useEffect(() => {
     if (playersTurn) {
@@ -30,24 +39,43 @@ function Board({ positions, moves: serverMoves, updateBoard, playersTurn, player
     }
   }, [positions, serverMoves]);
 
-  const onCellSelect = async (newCell) => {
+  const onCellSelect = (newCell) => {
     if (playersTurn) {
-      let label = null;
-
       if (selectedCell) {
-        if (newCell !== selectedCell && validMoves[selectedCell].has(newCell)) {
-          const toCell = newCell;
+        if (validMoves[selectedCell].has(newCell.label)) {
+          const toCell = newCell.label;
           const fromCell = selectedCell;
-          const moveToCellDomain = moves.find((cellMove) => cellMove.from === fromCell && cellMove.to === toCell);
+          const pendingMove = moves.find((move) => move.from === fromCell && move.to === toCell);
 
-          await updateBoard(moveToCellDomain.san);
+          updatePosition(newCell);
+          setPendingMove(pendingMove.san);
+        } else if (newCell.label === selectedCell) {
+          setSelectedCell(null);
         }
       } else {
-        label = newCell;
+        setSelectedCell(newCell.label);
+      }
+    }
+  };
+
+  const getIsDisabledCell = (cell) => {
+    if (!playersTurn || isPendingMove) {
+      return true;
+    }
+
+    if (selectedCell) {
+      if (cell.label === selectedCell || validMoves[selectedCell].has(cell.label)) {
+        return false;
       }
 
-      setSelectedCell(label);
+      return true;
     }
+
+    if (cell.color === playerColor) {
+      return false;
+    }
+
+    return true;
   };
 
   const renderItem = ({ item }) => {
@@ -64,11 +92,9 @@ function Board({ positions, moves: serverMoves, updateBoard, playersTurn, player
       }
     }
 
-    const disabled = !playersTurn || item.color !== playerColor;
-
     return (
       <Cell
-        disabled={disabled}
+        disabled={getIsDisabledCell(item)}
         isSelected={isSelected}
         cell={item}
         destinationStyles={styles}

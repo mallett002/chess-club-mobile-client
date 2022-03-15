@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { PIECES, fileToIndex } from '../../constants/board-helpers';
 import colors from '../../constants/colors';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const cellWidth = (Dimensions.get('window').width) / 8;
 
@@ -52,8 +53,8 @@ const Cell = ({ isSelected, cell, onPress, destinationStyles, disabled}) => {
     <View>
       <TouchableOpacity
         disabled={disabled}
-        onPress={async () => {
-          await onPress(cell.label);
+        onPress={() => {
+          onPress(cell)
         }}
         style={generateCellStyle(cell.label, isSelected, destinationStyles)}>
         {cell && cell.type && <Icon

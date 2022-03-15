@@ -40,3 +40,18 @@ export const indexToRank = {
  };
 
  export const fileToIndex = inverseObject(indexToFile);
+
+ export function getIndexForLabel(positions, label) {
+  let index;
+
+  for (let i = 0; i < positions.length; i++) {
+    const cell = positions[i];
+
+    if (cell.label === label) {
+      index = i;
+      break;
+    }
+  }
+
+  return index;
+}

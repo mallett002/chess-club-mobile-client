@@ -15,7 +15,7 @@ export default function (props) {
     variables: {
       playerId
     },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-first'
   });
 
   useEffect(() => {

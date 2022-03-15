@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -9,6 +9,8 @@ import { GET_BOARD_QUERY, UPDATE_BOARD_MUTATION } from '../../constants/queries'
 import Loading from '../../components/loading';
 import { AppContext } from '../../utils/context';
 import Board from '../../components/board';
+import GameActions from '../../components/board/game-actions';
+import {getIndexForLabel} from '../../constants/board-helpers';
 
 function getTurnText(playerId, turn, opponentUsername) {
   if (playerId === turn) {
@@ -21,23 +23,86 @@ function getTurnText(playerId, turn, opponentUsername) {
 function BoardScreen(props) {
   const { playerId } = useContext(AppContext);
   const { gameId } = props.route.params;
-  const { data, error, loading: loadingBoard } = useQuery(GET_BOARD_QUERY, {
+  const { data: getBoardData, error, loading: loadingBoard } = useQuery(GET_BOARD_QUERY, {
     variables: { gameId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-first'
   });
   const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
+  const [boardPositions, setBoardPositions] = useState([]);
+  const [pendingMove, setPendingMove] = useState('');
+  const [selectedCell, setSelectedCell] = useState('');
+  const [replacedCell, setReplacedCell] = useState(null);
 
-  if (loadingBoard) {
+  useEffect(() => {
+    if (getBoardData && getBoardData.getBoard) {
+      setBoardPositions(getBoardData.getBoard.positions);
+    }
+  }, [getBoardData, updateBoardData]);
+
+  if (!boardPositions.length) {
     return <Loading screen={'Board'} />
   }
 
-  const { status, moves, turn, opponentUsername, positions, playerOne } = data.getBoard;
+  const { status, moves, turn, opponentUsername, positions, playerOne } = getBoardData.getBoard;
   const updateBoard = (cell) => updateBoardMutation({
     variables: {
       gameId,
       cell
     }
   });
+
+  const updatePositionforPendingMove = (newCell) => {
+    setBoardPositions((positions) => {
+      const oldSpotIndex = getIndexForLabel(positions, selectedCell);
+      const newSpotIndex = getIndexForLabel(positions, newCell.label);
+      const selectedCellContents = positions[oldSpotIndex];
+
+      setReplacedCell(newCell);
+      const newSpotStuff = {
+        label: newCell.label,
+        color: selectedCellContents.color,
+        type: selectedCellContents.type
+      };
+
+      const oldSpotStuff = {
+        label: selectedCellContents.label,
+        color: null,
+        type: null
+      };
+      const copy = positions.slice();
+
+      copy.splice(newSpotIndex, 1, newSpotStuff);
+      copy.splice(oldSpotIndex, 1, oldSpotStuff);
+
+      return copy;
+    });
+  };
+
+  const cancelPendingMove = () => {
+    setBoardPositions((positions) => {
+      const oldSpotIndex = getIndexForLabel(positions, selectedCell);
+      const newSpotIndex = getIndexForLabel(positions, pendingMove);
+      const pendingMoveCellContents = positions[newSpotIndex];
+      const restoredOldSpot = {
+        label: selectedCell,
+        color: pendingMoveCellContents.color,
+        type: pendingMoveCellContents.type
+      };
+
+      const copy = positions.slice();
+
+      copy.splice(oldSpotIndex, 1, restoredOldSpot);
+      copy.splice(newSpotIndex, 1, replacedCell);
+
+      return copy;
+    });
+
+    setReplacedCell(null);
+    setPendingMove('');
+    setSelectedCell('');
+  };
+
+  const isPendingMove = selectedCell && pendingMove;
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -65,15 +130,27 @@ function BoardScreen(props) {
       </View>
       <View style={styles.fallenSoldiers}></View>
       <Board
+        updatePosition={updatePositionforPendingMove}
+        setPendingMove={setPendingMove}
+        isPendingMove={isPendingMove}
         playerColor={playerOne === playerId ? 'w' : 'b'}
         playersTurn={turn === playerId}
         updateBoard={updateBoard}
-        positions={positions}
+        positions={boardPositions}
+        selectedCell={selectedCell}
+        setSelectedCell={setSelectedCell}
         moves={moves}
         gameId={gameId}
       />
       <View style={styles.fallenSoldiers}></View>
-      {/* <GameActions /> */}
+      {
+        isPendingMove ?
+          <GameActions
+            exitMove={cancelPendingMove}
+            updateBoard={() => updateBoard(pendingMove)}
+          /> : null
+      }
+
     </SafeAreaView>
   );
 }

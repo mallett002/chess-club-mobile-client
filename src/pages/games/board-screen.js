@@ -25,7 +25,7 @@ function BoardScreen(props) {
   const { gameId } = props.route.params;
   const { data: getBoardData, error, loading: loadingBoard } = useQuery(GET_BOARD_QUERY, {
     variables: { gameId },
-    fetchPolicy: 'cache-first'
+    fetchPolicy: 'cache-and-network'
   });
   const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
   const [boardPositions, setBoardPositions] = useState([]);
@@ -44,12 +44,18 @@ function BoardScreen(props) {
   }
 
   const { status, moves, turn, opponentUsername, positions, playerOne } = getBoardData.getBoard;
-  const updateBoard = (cell) => updateBoardMutation({
-    variables: {
-      gameId,
-      cell
-    }
-  });
+  const doUpdateBoardMutation = async (cell) => {
+    await updateBoardMutation({
+      variables: {
+        gameId,
+        cell
+      }
+    });
+
+    setPendingMove('');
+    setSelectedCell('');
+    setReplacedCell(null);
+  };
 
   const updatePositionforPendingMove = (newCell) => {
     setBoardPositions((positions) => {
@@ -135,7 +141,6 @@ function BoardScreen(props) {
         isPendingMove={isPendingMove}
         playerColor={playerOne === playerId ? 'w' : 'b'}
         playersTurn={turn === playerId}
-        updateBoard={updateBoard}
         positions={boardPositions}
         selectedCell={selectedCell}
         setSelectedCell={setSelectedCell}
@@ -147,7 +152,7 @@ function BoardScreen(props) {
         isPendingMove ?
           <GameActions
             exitMove={cancelPendingMove}
-            updateBoard={() => updateBoard(pendingMove)}
+            updateBoard={() => doUpdateBoardMutation(pendingMove)}
           /> : null
       }
 

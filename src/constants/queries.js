@@ -51,6 +51,32 @@ export const UPDATE_BOARD_MUTATION = gql`
     }
 `;
 
+export const BOARD_UPDATED_SUBSCRIPTION = gql`
+  subscription boardUpdated($gameId: ID!) {
+    boardUpdated(gameId: $gameId) {
+      gameId
+      moves {
+        color
+        from
+        to
+        flags
+        piece
+        san
+      }
+      opponentUsername
+      playerOne
+      playerTwo
+      positions {
+        type
+        color
+        label
+      }
+      status
+      turn
+    }
+  }
+`
+
 export const CREATE_INVITATION_MUTATION = gql`
   mutation createInvitation($inviteeUsername: String!, $invitorColor: InvitorColor!) {
   createInvitation(inviteeUsername: $inviteeUsername, invitorColor: $invitorColor) {

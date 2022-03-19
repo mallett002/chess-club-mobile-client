@@ -28,7 +28,7 @@ function BoardScreen(props) {
     fetchPolicy: 'cache-and-network'
   });
   const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
-  const { data: subscriptionData, subscriptionLoading } = useSubscription(BOARD_UPDATED_SUBSCRIPTION, { variables: { gameId } });
+  const { data: subscriptionData, subscriptionLoading, error: subscriptionError } = useSubscription(BOARD_UPDATED_SUBSCRIPTION, { variables: { gameId } });
 
   const [boardPositions, setBoardPositions] = useState([]);
   const [pendingMove, setPendingMove] = useState('');
@@ -43,7 +43,7 @@ function BoardScreen(props) {
 
   // Todo: fix this, it's undefined always
   // Look into doing this: https://www.apollographql.com/docs/react/data/subscriptions#subscribing-to-updates-for-a-query
-  console.log({subscriptionData});
+  console.log({ subscriptionData, subscriptionLoading, subscriptionError });
 
   if (!boardPositions.length) {
     return <Loading screen={'Board'} />

@@ -23,7 +23,7 @@ function getTurnText(playerId, turn, opponentUsername) {
 function BoardScreen(props) {
   const { playerId } = useContext(AppContext);
   const { gameId } = props.route.params;
-  const { data: getBoardData, error, loading: loadingBoard } = useQuery(GET_BOARD_QUERY, {
+  const { data: getBoardData, error, loading: loadingBoard, subscribeToMore } = useQuery(GET_BOARD_QUERY, {
     variables: { gameId },
     fetchPolicy: 'cache-and-network'
   });
@@ -41,7 +41,6 @@ function BoardScreen(props) {
     }
   }, [getBoardData, updateBoardData]);
 
-  // Todo: fix this, it's undefined always
   // Look into doing this: https://www.apollographql.com/docs/react/data/subscriptions#subscribing-to-updates-for-a-query
   console.log({ subscriptionData, subscriptionLoading, subscriptionError });
 

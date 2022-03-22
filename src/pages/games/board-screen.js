@@ -28,7 +28,7 @@ function BoardScreen(props) {
     fetchPolicy: 'cache-and-network'
   });
   const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
-  const { data: subscriptionData, subscriptionLoading, error: subscriptionError } = useSubscription(BOARD_UPDATED_SUBSCRIPTION, { variables: { gameId } });
+  // const { data: subscriptionData, subscriptionLoading, error: subscriptionError } = useSubscription(BOARD_UPDATED_SUBSCRIPTION, { variables: { gameId } });
 
   const [boardPositions, setBoardPositions] = useState([]);
   const [pendingMove, setPendingMove] = useState('');
@@ -39,10 +39,21 @@ function BoardScreen(props) {
     if (getBoardData && getBoardData.getBoard) {
       setBoardPositions(getBoardData.getBoard.positions);
     }
-  }, [getBoardData, updateBoardData]);
 
-  // Look into doing this: https://www.apollographql.com/docs/react/data/subscriptions#subscribing-to-updates-for-a-query
-  console.log({ subscriptionData, subscriptionLoading, subscriptionError });
+    console.log('subscribing to more.....');
+    subscribeToMore({
+      document: BOARD_UPDATED_SUBSCRIPTION,
+      variables: { gameId },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const boardUpdatedData = subscriptionData.data.boardUpdated;
+
+        console.log({subData: subscriptionData.data});
+
+        return boardUpdatedData;
+      }
+    });
+  }, [getBoardData]);
 
   if (!boardPositions.length) {
     return <Loading screen={'Board'} />

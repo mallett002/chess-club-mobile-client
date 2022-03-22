@@ -25,41 +25,36 @@ function BoardScreen(props) {
   const { gameId } = props.route.params;
   const { data: getBoardData, error, loading: loadingBoard, subscribeToMore } = useQuery(GET_BOARD_QUERY, {
     variables: { gameId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
+    onCompleted: () => setBoardPositions(getBoardData.getBoard.positions)
   });
-  const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
-  // const { data: subscriptionData, subscriptionLoading, error: subscriptionError } = useSubscription(BOARD_UPDATED_SUBSCRIPTION, { variables: { gameId } });
-
+  const [updateBoardMutation] = useMutation(UPDATE_BOARD_MUTATION);
   const [boardPositions, setBoardPositions] = useState([]);
   const [pendingMove, setPendingMove] = useState('');
   const [selectedCell, setSelectedCell] = useState('');
   const [replacedCell, setReplacedCell] = useState(null);
 
   useEffect(() => {
-    if (getBoardData && getBoardData.getBoard) {
-      setBoardPositions(getBoardData.getBoard.positions);
-    }
-
-    console.log('subscribing to more.....');
     subscribeToMore({
       document: BOARD_UPDATED_SUBSCRIPTION,
       variables: { gameId },
       updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const boardUpdatedData = subscriptionData.data.boardUpdated;
+        if (!subscriptionData.data) {
+          return prev;
+        }
 
-        console.log({subData: subscriptionData.data});
-
-        return boardUpdatedData;
+        return Object.assign({}, prev, {
+          getBoard: subscriptionData.data.boardUpdated
+        });
       }
     });
-  }, [getBoardData]);
+  }, []);
 
   if (!boardPositions.length) {
     return <Loading screen={'Board'} />
   }
 
-  const { status, moves, turn, opponentUsername, positions, playerOne } = getBoardData.getBoard;
+  const { status, moves, turn, opponentUsername, playerOne } = getBoardData.getBoard;
   const doUpdateBoardMutation = async (cell) => {
     await updateBoardMutation({
       variables: {

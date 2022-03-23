@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useQuery, useMutation, useSubscription } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { Text, View, StyleSheet, SafeAreaView } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -30,7 +30,7 @@ function BoardScreen(props) {
   });
   const [updateBoardMutation] = useMutation(UPDATE_BOARD_MUTATION);
   const [boardPositions, setBoardPositions] = useState([]);
-  const [pendingMove, setPendingMove] = useState('');
+  const [pendingMove, setPendingMove] = useState(null);
   const [selectedCell, setSelectedCell] = useState('');
   const [replacedCell, setReplacedCell] = useState(null);
 
@@ -55,15 +55,16 @@ function BoardScreen(props) {
   }
 
   const { status, moves, turn, opponentUsername, playerOne } = getBoardData.getBoard;
-  const doUpdateBoardMutation = async (cell) => {
+
+  const doUpdateBoardMutation = async () => {
     await updateBoardMutation({
       variables: {
         gameId,
-        cell
+        cell: pendingMove.san
       }
     });
 
-    setPendingMove('');
+    setPendingMove(null);
     setSelectedCell('');
     setReplacedCell(null);
   };
@@ -98,7 +99,7 @@ function BoardScreen(props) {
   const cancelPendingMove = () => {
     setBoardPositions((positions) => {
       const oldSpotIndex = getIndexForLabel(positions, selectedCell);
-      const newSpotIndex = getIndexForLabel(positions, pendingMove);
+      const newSpotIndex = getIndexForLabel(positions, pendingMove.to);
       const pendingMoveCellContents = positions[newSpotIndex];
       const restoredOldSpot = {
         label: selectedCell,
@@ -115,7 +116,7 @@ function BoardScreen(props) {
     });
 
     setReplacedCell(null);
-    setPendingMove('');
+    setPendingMove(null);
     setSelectedCell('');
   };
 
@@ -163,7 +164,7 @@ function BoardScreen(props) {
         isPendingMove ?
           <GameActions
             exitMove={cancelPendingMove}
-            updateBoard={() => doUpdateBoardMutation(pendingMove)}
+            updateBoard={() => doUpdateBoardMutation()}
           /> : null
       }
 

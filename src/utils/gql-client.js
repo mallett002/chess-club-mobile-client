@@ -6,14 +6,14 @@ import { setContext } from '@apollo/client/link/context';
 
 export function getClient(token) {
   const wsLink = new GraphQLWsLink(createClient({
-    url: 'ws://192.168.0.220:4000/graphql',
+    url: 'ws:redacted/graphql',
     connectionParams: {
       authToken: token,
     },
   }));
 
   const httpLink = createHttpLink({
-    uri: 'http://192.168.0.220:4000/graphql',
+    uri: 'http:redacted/graphql',
   });
 
   const splitLink = split(

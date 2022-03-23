@@ -54,7 +54,8 @@ function BoardScreen(props) {
     return <Loading screen={'Board'} />
   }
 
-  const { status, moves, turn, opponentUsername, playerOne } = getBoardData.getBoard;
+  const { status, moves, turn, opponentUsername, playerOne, fallenSoldiers } = getBoardData.getBoard;
+  const playerColor = playerOne === playerId ? 'w' : 'b';
 
   const doUpdateBoardMutation = async () => {
     await updateBoardMutation({
@@ -147,11 +148,12 @@ function BoardScreen(props) {
         }
       </View>
       <View style={styles.fallenSoldiers}></View>
+      {/* <FallenSoldiers soldiers={playerColor === 'w' ? fallenSoldiers.playerTwoFallenSolders : fallenSoldiers.playerOneFallenSolders} /> */}
       <Board
         updatePosition={updatePositionforPendingMove}
         setPendingMove={setPendingMove}
         isPendingMove={isPendingMove}
-        playerColor={playerOne === playerId ? 'w' : 'b'}
+        playerColor={playerColor}
         playersTurn={turn === playerId}
         positions={boardPositions}
         selectedCell={selectedCell}
@@ -160,6 +162,8 @@ function BoardScreen(props) {
         gameId={gameId}
       />
       <View style={styles.fallenSoldiers}></View>
+      {/* Fallen soldiers: array of pieces in order from strongest to weakest */}
+      {/* <FallenSoldiers soldiers={playerColor === 'b' ? fallenSoldiers.playerTwoFallenSolders : fallenSoldiers.playerOneFallenSolders} /> */}
       {
         isPendingMove ?
           <GameActions

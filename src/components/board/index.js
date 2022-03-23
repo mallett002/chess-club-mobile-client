@@ -48,7 +48,7 @@ function Board({
           const pendingMove = moves.find((move) => move.from === fromCell && move.to === toCell);
 
           updatePosition(newCell);
-          setPendingMove(pendingMove.san);
+          setPendingMove({to: pendingMove.to, san: pendingMove.san});
         } else if (newCell.label === selectedCell) {
           setSelectedCell(null);
         }

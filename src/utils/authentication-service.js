@@ -27,7 +27,7 @@ export const useAuthentication = (data) => {
 };
 
 export async function logInFetch(username, password) {
-  const response = await fetch('http://[redacted]/login', {
+  const response = await fetch('http://redacted/login', {
     method: 'POST',
     body: JSON.stringify({
       username,

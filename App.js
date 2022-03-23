@@ -11,7 +11,7 @@ import ProfileScreen from './src/pages/profile/profile-screen';
 import InvitationsScreen from './src/pages/invitations/invitations-screen';
 import BottomTab from './src/components/nav/bottom-tab';
 import BoardScreen from './src/pages/games/board-screen';
-import { client } from './src/utils/gql-client';
+import { getClient } from './src/utils/gql-client';
 import { AppContext } from './src/utils/context';
 import { getTokenFromStorage, decodeJwt } from './src/utils/token-utils';
 
@@ -71,7 +71,7 @@ function App() {
 
   return (
     <AppContext.Provider value={context}>
-      <ApolloProvider client={client}>
+      <ApolloProvider client={getClient(accessToken)}>
         <NavigationContainer>
           <Stack.Navigator
             screenOptions={{

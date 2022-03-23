@@ -5,12 +5,12 @@ import Feather from 'react-native-vector-icons/Feather';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import colors, { RUSSIAN } from '../../constants/colors';
-import { GET_BOARD_QUERY, UPDATE_BOARD_MUTATION } from '../../constants/queries';
+import { GET_BOARD_QUERY, UPDATE_BOARD_MUTATION, BOARD_UPDATED_SUBSCRIPTION } from '../../constants/queries';
 import Loading from '../../components/loading';
 import { AppContext } from '../../utils/context';
 import Board from '../../components/board';
 import GameActions from '../../components/board/game-actions';
-import {getIndexForLabel} from '../../constants/board-helpers';
+import { getIndexForLabel } from '../../constants/board-helpers';
 
 function getTurnText(playerId, turn, opponentUsername) {
   if (playerId === turn) {
@@ -23,36 +23,48 @@ function getTurnText(playerId, turn, opponentUsername) {
 function BoardScreen(props) {
   const { playerId } = useContext(AppContext);
   const { gameId } = props.route.params;
-  const { data: getBoardData, error, loading: loadingBoard } = useQuery(GET_BOARD_QUERY, {
+  const { data: getBoardData, error, loading: loadingBoard, subscribeToMore } = useQuery(GET_BOARD_QUERY, {
     variables: { gameId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
+    onCompleted: () => setBoardPositions(getBoardData.getBoard.positions)
   });
-  const [updateBoardMutation, { data: updateBoardData, error: updateBoardError }] = useMutation(UPDATE_BOARD_MUTATION);
+  const [updateBoardMutation] = useMutation(UPDATE_BOARD_MUTATION);
   const [boardPositions, setBoardPositions] = useState([]);
-  const [pendingMove, setPendingMove] = useState('');
+  const [pendingMove, setPendingMove] = useState(null);
   const [selectedCell, setSelectedCell] = useState('');
   const [replacedCell, setReplacedCell] = useState(null);
 
   useEffect(() => {
-    if (getBoardData && getBoardData.getBoard) {
-      setBoardPositions(getBoardData.getBoard.positions);
-    }
-  }, [getBoardData, updateBoardData]);
+    subscribeToMore({
+      document: BOARD_UPDATED_SUBSCRIPTION,
+      variables: { gameId },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) {
+          return prev;
+        }
+
+        return Object.assign({}, prev, {
+          getBoard: subscriptionData.data.boardUpdated
+        });
+      }
+    });
+  }, []);
 
   if (!boardPositions.length) {
     return <Loading screen={'Board'} />
   }
 
-  const { status, moves, turn, opponentUsername, positions, playerOne } = getBoardData.getBoard;
-  const doUpdateBoardMutation = async (cell) => {
+  const { status, moves, turn, opponentUsername, playerOne } = getBoardData.getBoard;
+
+  const doUpdateBoardMutation = async () => {
     await updateBoardMutation({
       variables: {
         gameId,
-        cell
+        cell: pendingMove.san
       }
     });
 
-    setPendingMove('');
+    setPendingMove(null);
     setSelectedCell('');
     setReplacedCell(null);
   };
@@ -87,7 +99,7 @@ function BoardScreen(props) {
   const cancelPendingMove = () => {
     setBoardPositions((positions) => {
       const oldSpotIndex = getIndexForLabel(positions, selectedCell);
-      const newSpotIndex = getIndexForLabel(positions, pendingMove);
+      const newSpotIndex = getIndexForLabel(positions, pendingMove.to);
       const pendingMoveCellContents = positions[newSpotIndex];
       const restoredOldSpot = {
         label: selectedCell,
@@ -104,7 +116,7 @@ function BoardScreen(props) {
     });
 
     setReplacedCell(null);
-    setPendingMove('');
+    setPendingMove(null);
     setSelectedCell('');
   };
 
@@ -152,7 +164,7 @@ function BoardScreen(props) {
         isPendingMove ?
           <GameActions
             exitMove={cancelPendingMove}
-            updateBoard={() => doUpdateBoardMutation(pendingMove)}
+            updateBoard={() => doUpdateBoardMutation()}
           /> : null
       }
 

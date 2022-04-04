@@ -11,6 +11,7 @@ import { AppContext } from '../../utils/context';
 import Board from '../../components/board';
 import GameActions from '../../components/board/game-actions';
 import { getIndexForLabel } from '../../constants/board-helpers';
+import FallenSoldiers from './fallen-soldiers';
 
 function getTurnText(playerId, turn, opponentUsername) {
   if (playerId === turn) {
@@ -25,7 +26,7 @@ function BoardScreen(props) {
   const { gameId } = props.route.params;
   const { data: getBoardData, error, loading: loadingBoard, subscribeToMore } = useQuery(GET_BOARD_QUERY, {
     variables: { gameId },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
     onCompleted: () => setBoardPositions(getBoardData.getBoard.positions)
   });
   const [updateBoardMutation] = useMutation(UPDATE_BOARD_MUTATION);
@@ -56,12 +57,15 @@ function BoardScreen(props) {
 
   const { status, moves, turn, opponentUsername, playerOne, fallenSoldiers } = getBoardData.getBoard;
   const playerColor = playerOne === playerId ? 'w' : 'b';
+  const { playerOnePieces, playerTwoPieces } = fallenSoldiers;
+  console.log({ playerOnePieces, playerTwoPieces });
 
   const doUpdateBoardMutation = async () => {
     await updateBoardMutation({
       variables: {
         gameId,
-        cell: pendingMove.san
+        cell: pendingMove.san,
+        captured: pendingMove.captured
       }
     });
 
@@ -147,8 +151,7 @@ function BoardScreen(props) {
           </View>
         }
       </View>
-      <View style={styles.fallenSoldiers}></View>
-      {/* <FallenSoldiers soldiers={playerColor === 'w' ? fallenSoldiers.playerTwoFallenSolders : fallenSoldiers.playerOneFallenSolders} /> */}
+      <FallenSoldiers pieces={playerColor === 'w' ? playerTwoPieces : playerOnePieces} />
       <Board
         updatePosition={updatePositionforPendingMove}
         setPendingMove={setPendingMove}
@@ -161,9 +164,7 @@ function BoardScreen(props) {
         moves={moves}
         gameId={gameId}
       />
-      <View style={styles.fallenSoldiers}></View>
-      {/* Fallen soldiers: array of pieces in order from strongest to weakest */}
-      {/* <FallenSoldiers soldiers={playerColor === 'b' ? fallenSoldiers.playerTwoFallenSolders : fallenSoldiers.playerOneFallenSolders} /> */}
+      <FallenSoldiers pieces={playerColor === 'b' ? playerTwoPieces : playerOnePieces} />
       {
         isPendingMove ?
           <GameActions

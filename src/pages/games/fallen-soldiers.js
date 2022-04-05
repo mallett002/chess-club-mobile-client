@@ -1,12 +1,21 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { RUSSIAN } from '../../constants/colors';
+import { PIECES } from '../../constants/board-helpers';
 
-function FallenSoldiers({pieces}) {
+function FallenSoldiers({pieces, color}) {
   return (
     <View style={styles.fallenSoldiers}>
-      {pieces.map((piece) => <Text>{piece}</Text>)}
+      {pieces.map((piece, i) => (
+        <Icon
+          key={i}
+          color={color}
+          name={PIECES[piece]}
+          size={20}
+        />
+      ))}
     </View>
   )
 }
@@ -14,7 +23,10 @@ function FallenSoldiers({pieces}) {
 const styles = StyleSheet.create({
   fallenSoldiers: {
     height: 40,
-    backgroundColor: RUSSIAN.DARK_GRAY
+    flexDirection: 'row',
+    backgroundColor: RUSSIAN.DARK_GRAY,
+    alignItems: 'center',
+    paddingHorizontal: 8
   }
 });
 

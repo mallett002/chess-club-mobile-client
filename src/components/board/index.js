@@ -43,7 +43,7 @@ function Board({
   const onCellSelect = (newCell) => {
     if (playersTurn) {
       if (selectedCell) {
-        if (validMoves[selectedCell].has(newCell.label)) {
+        if (validMoves[selectedCell] && validMoves[selectedCell].has(newCell.label)) {
           const toCell = newCell.label;
           const fromCell = selectedCell;
           const pendingMove = moves.find((move) => move.from === fromCell && move.to === toCell);
@@ -65,7 +65,7 @@ function Board({
     }
 
     if (selectedCell) {
-      if (cell.label === selectedCell || validMoves[selectedCell].has(cell.label)) {
+      if (cell.label === selectedCell || validMoves[selectedCell] && validMoves[selectedCell].has(cell.label)) {
         return false;
       }
 

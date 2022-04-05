@@ -28,8 +28,8 @@ export const CURRENT_GAMES_QUERY = gql`
 `;
 
 export const UPDATE_BOARD_MUTATION = gql`
-  mutation updateBoard($gameId: ID!, $cell: String!) {
-      updateBoard(gameId: $gameId, cell: $cell) {
+  mutation updateBoard($gameId: ID!, $cell: String!, $captured: Piece) {
+      updateBoard(gameId: $gameId, cell: $cell, captured: $captured) {
         gameId
         playerOne
         playerTwo

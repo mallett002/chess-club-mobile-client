@@ -151,7 +151,9 @@ function BoardScreen(props) {
           </View>
         }
       </View>
-      <FallenSoldiers pieces={playerColor === 'w' ? playerTwoPieces : playerOnePieces} />
+      <FallenSoldiers
+        color={playerColor === 'w' ? colors.BLACK_PIECE : colors.WHITE_PIECE}
+        pieces={playerColor === 'w' ? playerTwoPieces : playerOnePieces} />
       <Board
         updatePosition={updatePositionforPendingMove}
         setPendingMove={setPendingMove}
@@ -164,7 +166,9 @@ function BoardScreen(props) {
         moves={moves}
         gameId={gameId}
       />
-      <FallenSoldiers pieces={playerColor === 'b' ? playerTwoPieces : playerOnePieces} />
+      <FallenSoldiers
+        color={playerColor === 'b' ? colors.BLACK_PIECE : colors.WHITE_PIECE}
+        pieces={playerColor === 'b' ? playerTwoPieces : playerOnePieces} />
       {
         isPendingMove ?
           <GameActions

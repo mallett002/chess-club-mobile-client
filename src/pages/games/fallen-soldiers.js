@@ -11,6 +11,7 @@ function FallenSoldiers({pieces, color}) {
       {pieces.map((piece, i) => (
         <Icon
           key={i}
+          style={styles.piece}
           color={color}
           name={PIECES[piece]}
           size={20}
@@ -27,6 +28,10 @@ const styles = StyleSheet.create({
     backgroundColor: RUSSIAN.DARK_GRAY,
     alignItems: 'center',
     paddingHorizontal: 8
+  },
+  piece: {
+    // Todo: calculate this
+    marginRight: 5.5
   }
 });
 

@@ -11,6 +11,7 @@ import { AppContext } from '../../utils/context';
 import Board from '../../components/board';
 import GameActions from '../../components/board/game-actions';
 import { getIndexForLabel } from '../../constants/board-helpers';
+import FallenSoldiers from './fallen-soldiers';
 
 function getTurnText(playerId, turn, opponentUsername) {
   if (playerId === turn) {
@@ -25,7 +26,7 @@ function BoardScreen(props) {
   const { gameId } = props.route.params;
   const { data: getBoardData, error, loading: loadingBoard, subscribeToMore } = useQuery(GET_BOARD_QUERY, {
     variables: { gameId },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only', // Todo: look at these "network-only's"
     onCompleted: () => setBoardPositions(getBoardData.getBoard.positions)
   });
   const [updateBoardMutation] = useMutation(UPDATE_BOARD_MUTATION);
@@ -54,13 +55,17 @@ function BoardScreen(props) {
     return <Loading screen={'Board'} />
   }
 
-  const { status, moves, turn, opponentUsername, playerOne } = getBoardData.getBoard;
+  const { status, moves, turn, opponentUsername, playerOne, fallenSoldiers } = getBoardData.getBoard;
+  const playerColor = playerOne === playerId ? 'w' : 'b';
+  const { playerOnePieces, playerTwoPieces } = fallenSoldiers;
+  console.log({ playerOnePieces, playerTwoPieces });
 
   const doUpdateBoardMutation = async () => {
     await updateBoardMutation({
       variables: {
         gameId,
-        cell: pendingMove.san
+        cell: pendingMove.san,
+        captured: pendingMove.captured
       }
     });
 
@@ -146,12 +151,14 @@ function BoardScreen(props) {
           </View>
         }
       </View>
-      <View style={styles.fallenSoldiers}></View>
+      <FallenSoldiers
+        color={playerColor === 'w' ? colors.BLACK_PIECE : colors.WHITE_PIECE}
+        pieces={playerColor === 'w' ? playerTwoPieces : playerOnePieces} />
       <Board
         updatePosition={updatePositionforPendingMove}
         setPendingMove={setPendingMove}
         isPendingMove={isPendingMove}
-        playerColor={playerOne === playerId ? 'w' : 'b'}
+        playerColor={playerColor}
         playersTurn={turn === playerId}
         positions={boardPositions}
         selectedCell={selectedCell}
@@ -159,7 +166,9 @@ function BoardScreen(props) {
         moves={moves}
         gameId={gameId}
       />
-      <View style={styles.fallenSoldiers}></View>
+      <FallenSoldiers
+        color={playerColor === 'b' ? colors.BLACK_PIECE : colors.WHITE_PIECE}
+        pieces={playerColor === 'b' ? playerTwoPieces : playerOnePieces} />
       {
         isPendingMove ?
           <GameActions

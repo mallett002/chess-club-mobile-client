@@ -28,13 +28,14 @@ export const CURRENT_GAMES_QUERY = gql`
 `;
 
 export const UPDATE_BOARD_MUTATION = gql`
-  mutation updateBoard($gameId: ID!, $cell: String!) {
-      updateBoard(gameId: $gameId, cell: $cell) {
+  mutation updateBoard($gameId: ID!, $cell: String!, $captured: Piece) {
+      updateBoard(gameId: $gameId, cell: $cell, captured: $captured) {
         gameId
         playerOne
         playerTwo
         turn
         moves {
+          captured
           color
           from
           to
@@ -56,12 +57,17 @@ export const BOARD_UPDATED_SUBSCRIPTION = gql`
     boardUpdated(gameId: $gameId) {
       gameId
       moves {
+        captured
         color
         from
         to
         flags
         piece
         san
+      }
+      fallenSoldiers {
+        playerOnePieces
+        playerTwoPieces
       }
       opponentUsername
       playerOne
@@ -114,12 +120,17 @@ export const GET_BOARD_QUERY = gql`
     getBoard(gameId: $gameId) {
       gameId
       moves {
+        captured
         color
         from
         to
         flags
         piece
         san
+      }
+      fallenSoldiers {
+        playerOnePieces
+        playerTwoPieces
       }
       opponentUsername
       playerOne

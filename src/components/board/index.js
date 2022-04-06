@@ -18,7 +18,6 @@ function Board({
   const [moves, setMoves] = useState(null);
   const [validMoves, setValidMoves] = useState(null);
 
-  // wonder if this needs to be in board-screen? Sometimes validMoves[selctedCell] is undefined.
   useEffect(() => {
     if (playersTurn) {
       let movesList = null;

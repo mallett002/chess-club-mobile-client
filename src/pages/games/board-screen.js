@@ -26,7 +26,7 @@ function BoardScreen(props) {
   const { gameId } = props.route.params;
   const { data: getBoardData, error, loading: loadingBoard, subscribeToMore } = useQuery(GET_BOARD_QUERY, {
     variables: { gameId },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'network-only', // Todo: look at these "network-only's"
     onCompleted: () => setBoardPositions(getBoardData.getBoard.positions)
   });
   const [updateBoardMutation] = useMutation(UPDATE_BOARD_MUTATION);

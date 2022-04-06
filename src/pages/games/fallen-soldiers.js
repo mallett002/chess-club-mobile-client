@@ -1,9 +1,11 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Dimensions, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { RUSSIAN } from '../../constants/colors';
 import { PIECES } from '../../constants/board-helpers';
+
+const calculatedMargin = (Dimensions.get('window').width) / 70;
 
 function FallenSoldiers({pieces, color}) {
   return (
@@ -30,8 +32,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8
   },
   piece: {
-    // Todo: calculate this
-    marginRight: 5.5
+    marginRight: calculatedMargin
   }
 });
 

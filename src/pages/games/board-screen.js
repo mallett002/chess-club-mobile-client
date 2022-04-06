@@ -126,7 +126,6 @@ function BoardScreen(props) {
   };
 
   const isPendingMove = selectedCell && pendingMove;
-  const pieces = ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'b', 'b', 'n', 'n', 'r', 'r', 'q'];
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -154,7 +153,7 @@ function BoardScreen(props) {
       </View>
       <FallenSoldiers
         color={playerColor === 'w' ? colors.BLACK_PIECE : colors.WHITE_PIECE}
-        pieces={pieces} />
+        pieces={playerColor === 'w' ? playerTwoPieces : playerOnePieces} />
       <Board
         updatePosition={updatePositionforPendingMove}
         setPendingMove={setPendingMove}

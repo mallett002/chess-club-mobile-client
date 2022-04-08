@@ -13,12 +13,30 @@ import GameActions from '../../components/board/game-actions';
 import { getIndexForLabel } from '../../constants/board-helpers';
 import FallenSoldiers from './fallen-soldiers';
 
-function getTurnText(playerId, turn, opponentUsername) {
-  if (playerId === turn) {
-    return 'My turn';
+// If check mate, whoever's turn it is has lost.
+function getTurnText(playerId, turn, opponentUsername, status) {
+  // STATUSES: CHECKMATE, STALEMATE, DRAW, PLAY
+  if (status !== 'CHECKMATE') {
+    if (playerId === turn) {
+      return 'My turn';
+    }
+  
+    return `${opponentUsername}'s turn`;
   }
 
-  return `${opponentUsername}'s turn`;
+  if (playerId === turn) {
+    return `${opponentUsername} has won the game.`;
+  }
+  
+  return 'You have won the game!';
+}
+
+function getStatusText(status) {
+  if (status === 'CHECK') {
+    return 'Check!';
+  }
+
+  return 'Check Mate!'
 }
 
 function BoardScreen(props) {
@@ -36,7 +54,7 @@ function BoardScreen(props) {
   const [replacedCell, setReplacedCell] = useState(null);
 
   useEffect(() => {
-    subscribeToMore({
+    const unsubscribe = subscribeToMore({
       document: BOARD_UPDATED_SUBSCRIPTION,
       variables: { gameId },
       updateQuery: (prev, { subscriptionData }) => {
@@ -49,6 +67,12 @@ function BoardScreen(props) {
         });
       }
     });
+
+    // unsubscribe cleanup:
+    return () => {
+      console.log('Unsubscribing to board updates.....');
+      unsubscribe();
+    }
   }, []);
 
   if (!boardPositions.length) {
@@ -58,7 +82,6 @@ function BoardScreen(props) {
   const { status, moves, turn, opponentUsername, playerOne, fallenSoldiers } = getBoardData.getBoard;
   const playerColor = playerOne === playerId ? 'w' : 'b';
   const { playerOnePieces, playerTwoPieces } = fallenSoldiers;
-  console.log({ playerOnePieces, playerTwoPieces });
 
   const doUpdateBoardMutation = async () => {
     await updateBoardMutation({
@@ -143,11 +166,11 @@ function BoardScreen(props) {
         <Text style={styles.title}>{`Game against ${opponentUsername}`}</Text>
       </View>
       <View style={styles.gameStatus}>
-        <Text style={styles.oponentText}>{getTurnText(playerId, turn, opponentUsername)}</Text>
+        <Text style={styles.oponentText}>{getTurnText(playerId, turn, opponentUsername, status)}</Text>
         {
-          status === 'CHECK' &&
+          status !== 'PLAY' &&
           <View style={styles.gameAlert}>
-            <Text style={styles.alertText}>{'Check!'}</Text>
+            <Text style={styles.alertText}>{getStatusText(status)}</Text>
           </View>
         }
       </View>

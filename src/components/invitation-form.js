@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import Feather from 'react-native-vector-icons/Feather';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import colors, { RUSSIAN } from '../constants/colors';
+import { RUSSIAN } from '../constants/colors';
 import { CREATE_INVITATION_MUTATION } from '../constants/queries';
 import { getInviteCreationError } from '../utils/errors';
 import ErrorAlert from '../components/error-alert';
@@ -56,7 +56,7 @@ function InvitationForm(props) {
       </View>
       <Formik
         initialValues={{
-          username: '',
+          username: props.route.params.opponent || '',
         }}
         validateOnChange
         validateOnBlur

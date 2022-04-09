@@ -59,7 +59,7 @@ function Board({
   };
 
   const getIsDisabledCell = (cell) => {
-    if (!playersTurn || isPendingMove) {
+    if (!playersTurn || isPendingMove || !serverMoves.length) {
       return true;
     }
 

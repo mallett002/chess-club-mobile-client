@@ -24,19 +24,21 @@ function getTurnText(playerId, turn, opponentUsername, status) {
     return `${opponentUsername}'s turn`;
   }
 
-  if (playerId === turn) {
-    return `${opponentUsername} has won the game.`;
-  }
-  
-  return 'You have won the game!';
+  return '';
 }
 
-function getStatusText(status) {
+function getStatusText(status, playerId, turn, opponentUsername) {
   if (status === 'CHECK') {
     return 'Check!';
-  }
+  } else { // checkmate
+    if (playerId === turn) {
+      return `Checkmate! ${opponentUsername} has won the game.`;
+    }
 
-  return 'Check Mate!'
+    return 'Checkmate! You have won the game.';
+  }
+  
+  return '';  
 }
 
 function BoardScreen(props) {
@@ -82,6 +84,8 @@ function BoardScreen(props) {
   const { status, moves, turn, opponentUsername, playerOne, fallenSoldiers } = getBoardData.getBoard;
   const playerColor = playerOne === playerId ? 'w' : 'b';
   const { playerOnePieces, playerTwoPieces } = fallenSoldiers;
+  const isPendingMove = selectedCell && pendingMove;
+  const isGameOver = status === 'CHECKMATE' || status === 'STALEMATE' || status === 'DRAW';
 
   const doUpdateBoardMutation = async () => {
     await updateBoardMutation({
@@ -148,7 +152,15 @@ function BoardScreen(props) {
     setSelectedCell('');
   };
 
-  const isPendingMove = selectedCell && pendingMove;
+  // Todo: cancel => exit the game, don't invite, go back to games screen, delete game
+  const cancelNewGameInvite = () => {
+    props.navigation.goBack();
+  };
+
+  // Todo: Invite => send invitation, go to invitations screen, delete game
+  const inviteNewGame = () => {
+    props.navigation.navigate('INVITATION_FORM', {opponent: opponentUsername});
+  };
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -170,7 +182,7 @@ function BoardScreen(props) {
         {
           status !== 'PLAY' &&
           <View style={styles.gameAlert}>
-            <Text style={styles.alertText}>{getStatusText(status)}</Text>
+            <Text style={styles.alertText}>{getStatusText(status, playerId, turn, opponentUsername)}</Text>
           </View>
         }
       </View>
@@ -193,9 +205,13 @@ function BoardScreen(props) {
         color={playerColor === 'b' ? colors.BLACK_PIECE : colors.WHITE_PIECE}
         pieces={playerColor === 'b' ? playerTwoPieces : playerOnePieces} />
       {
-        isPendingMove ?
+        isPendingMove || isGameOver ?
           <GameActions
             exitMove={cancelPendingMove}
+            cancelNewGameInvite={cancelNewGameInvite}
+            inviteNewGame={inviteNewGame}
+            opponentUsername={opponentUsername}
+            isGameOver={isGameOver}
             updateBoard={() => doUpdateBoardMutation()}
           /> : null
       }
@@ -229,8 +245,10 @@ const styles = StyleSheet.create({
     minHeight: 70,
   },
   gameAlert: {
-    borderWidth: 2,
-    borderColor: colors.DARK_ORANGE,
+    borderTopWidth: 2,
+    borderBottomWidth: 2,
+    borderTopColor: colors.DARK_ORANGE,
+    borderBottomColor: colors.DARK_ORANGE,
     backgroundColor: colors.LIGHT_PEACH,
     paddingVertical: 8,
     flexDirection: 'row',

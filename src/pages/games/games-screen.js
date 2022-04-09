@@ -19,6 +19,7 @@ export default function (props) {
   });
 
   useEffect(() => {
+    // not sure this is working...
     const unsubscribe = props.navigation.addListener('focus', () => {
       if (refetch) {
         refetch();

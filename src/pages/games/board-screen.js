@@ -5,7 +5,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import colors, { RUSSIAN } from '../../constants/colors';
-import { GET_BOARD_QUERY, UPDATE_BOARD_MUTATION, BOARD_UPDATED_SUBSCRIPTION } from '../../constants/queries';
+import { GET_BOARD_QUERY, UPDATE_BOARD_MUTATION, BOARD_UPDATED_SUBSCRIPTION, END_GAME_MUTATION } from '../../constants/queries';
 import Loading from '../../components/loading';
 import { AppContext } from '../../utils/context';
 import Board from '../../components/board';
@@ -50,6 +50,7 @@ function BoardScreen(props) {
     onCompleted: () => setBoardPositions(getBoardData.getBoard.positions)
   });
   const [updateBoardMutation] = useMutation(UPDATE_BOARD_MUTATION);
+  const [endGameMutation] = useMutation(END_GAME_MUTATION);
   const [boardPositions, setBoardPositions] = useState([]);
   const [pendingMove, setPendingMove] = useState(null);
   const [selectedCell, setSelectedCell] = useState('');
@@ -153,7 +154,12 @@ function BoardScreen(props) {
   };
 
   // Todo: cancel => exit the game, don't invite, go back to games screen, delete game
-  const cancelNewGameInvite = () => {
+  const cancelNewGameInvite = async () => {
+    await endGameMutation({
+      variables: {
+        gameId
+      }
+    });
     props.navigation.goBack();
   };
 

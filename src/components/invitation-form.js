@@ -56,6 +56,7 @@ function InvitationForm(props) {
       </View>
       <Formik
         initialValues={{
+          // TODO: fix this. erroring out
           username: props.route.params.opponent || '',
         }}
         validateOnChange

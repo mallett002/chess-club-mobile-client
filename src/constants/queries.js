@@ -27,6 +27,12 @@ export const CURRENT_GAMES_QUERY = gql`
   }
 `;
 
+export const END_GAME_MUTATION = gql`
+  mutation endGame($gameId: ID!) {
+    endGame(gameId: $gameId)
+  }
+`;
+
 export const UPDATE_BOARD_MUTATION = gql`
   mutation updateBoard($gameId: ID!, $cell: String!, $captured: Piece) {
       updateBoard(gameId: $gameId, cell: $cell, captured: $captured) {

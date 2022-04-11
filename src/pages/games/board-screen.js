@@ -13,9 +13,7 @@ import GameActions from '../../components/board/game-actions';
 import { getIndexForLabel } from '../../constants/board-helpers';
 import FallenSoldiers from './fallen-soldiers';
 
-// If check mate, whoever's turn it is has lost.
 function getTurnText(playerId, turn, opponentUsername, status) {
-  // STATUSES: CHECKMATE, STALEMATE, DRAW, PLAY
   if (status !== 'CHECKMATE') {
     if (playerId === turn) {
       return 'My turn';
@@ -30,7 +28,7 @@ function getTurnText(playerId, turn, opponentUsername, status) {
 function getStatusText(status, playerId, turn, opponentUsername) {
   if (status === 'CHECK') {
     return 'Check!';
-  } else { // checkmate
+  } else {
     if (playerId === turn) {
       return `Checkmate! ${opponentUsername} has won the game.`;
     }
@@ -151,7 +149,6 @@ function BoardScreen(props) {
     setSelectedCell('');
   };
 
-  // Todo: cancel => exit the game, don't invite, go back to games screen, delete game
   const cancelNewGameInvite = async () => {
     await endGameMutation({
       variables: {

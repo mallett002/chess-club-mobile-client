@@ -4,21 +4,24 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RUSSIAN } from '../../constants/colors';
 
 function GameActions(props) {
+  const cancelAction = props.isGameOver ? props.cancelNewGameInvite : props.exitMove;
+  const acceptAction = props.isGameOver ? props.inviteNewGame : props.updateBoard;
+
   return (
     <View style={styles.wrapper}>
-      <Text style={styles.title}>{'Accept move?'}</Text>
+      <Text style={styles.title}>{props.isGameOver ? `Invite ${props.opponentUsername} to new game?` : 'Accept move?'}</Text>
       <View style={styles.buttonGroup}>
         <TouchableOpacity
-          onPress={props.exitMove}
+          onPress={cancelAction}
           style={[styles.button, { backgroundColor: RUSSIAN.ORANGE }]}
         >
           <Text style={styles.buttonText}>{'Cancel'}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={props.updateBoard}
+          onPress={acceptAction}
           style={[styles.button, { backgroundColor: RUSSIAN.GREEN }]}
         >
-          <Text style={styles.buttonText}>{'Accept'}</Text>
+          <Text style={styles.buttonText}>{props.isGameOver ? 'Invite' : 'Accept'}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -33,7 +36,8 @@ const styles = StyleSheet.create({
     color: RUSSIAN.LIGHT_GRAY,
     fontSize: 16,
     marginLeft: 8,
-    marginBottom: 20
+    marginBottom: 20,
+    marginTop: 2
   },
   buttonGroup: {
     flexDirection: 'row',

@@ -33,6 +33,8 @@ function InvitationForm(props) {
     }
   });
 
+  const usernamePrefill = props.route.params ? props.route.params.opponent : '';
+
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={styles.wrapper}
@@ -56,8 +58,7 @@ function InvitationForm(props) {
       </View>
       <Formik
         initialValues={{
-          // TODO: fix this. erroring out
-          username: props.route.params.opponent || '',
+          username: usernamePrefill,
         }}
         validateOnChange
         validateOnBlur

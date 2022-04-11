@@ -11,15 +11,14 @@ import Loading from '../../components/loading';
 
 export default function (props) {
   const { playerId } = useContext(AppContext);
-  const { data, error, loading, refetch } = useQuery(CURRENT_GAMES_QUERY, {
+  const { data, loading, refetch } = useQuery(CURRENT_GAMES_QUERY, {
     variables: {
       playerId
     },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'cache-and-network'
   });
 
   useEffect(() => {
-    // not sure this is working...
     const unsubscribe = props.navigation.addListener('focus', () => {
       if (refetch) {
         refetch();
@@ -27,7 +26,7 @@ export default function (props) {
     });
 
     return unsubscribe;
-  }, [props.navigation]);
+  }, [props.navigation, data]);
 
   if (loading) {
     return <Loading screen={'Games'} />;

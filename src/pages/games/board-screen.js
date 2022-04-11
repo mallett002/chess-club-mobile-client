@@ -71,9 +71,7 @@ function BoardScreen(props) {
       }
     });
 
-    // unsubscribe cleanup:
     return () => {
-      console.log('Unsubscribing to board updates.....');
       unsubscribe();
     }
   }, []);
@@ -163,8 +161,12 @@ function BoardScreen(props) {
     props.navigation.goBack();
   };
 
-  // Todo: Invite => send invitation, go to invitations screen, delete game
-  const inviteNewGame = () => {
+  const inviteNewGame = async () => {
+    await endGameMutation({
+      variables: {
+        gameId
+      }
+    });
     props.navigation.navigate('INVITATION_FORM', {opponent: opponentUsername});
   };
 

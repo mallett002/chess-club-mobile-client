@@ -13,8 +13,10 @@ import GameActions from '../../components/board/game-actions';
 import { getIndexForLabel } from '../../constants/board-helpers';
 import FallenSoldiers from './fallen-soldiers';
 
+const endGameStatuses = ['CHECKMATE', 'STALEMATE', 'DRAW'];
+
 function getTurnText(playerId, turn, opponentUsername, status) {
-  if (status !== 'CHECKMATE') {
+  if (!endGameStatuses.includes(status)) {
     if (playerId === turn) {
       return 'My turn';
     }
@@ -28,7 +30,11 @@ function getTurnText(playerId, turn, opponentUsername, status) {
 function getStatusText(status, playerId, turn, opponentUsername) {
   if (status === 'CHECK') {
     return 'Check!';
-  } else {
+  } else if (status === 'STALEMATE') {
+    return 'The game has ended in a stalemate.';
+  } else if (status === 'DRAW') {
+    return 'The game has ended in a draw.';
+  } else if (status === 'CHECKMATE') {
     if (playerId === turn) {
       return `Checkmate! ${opponentUsername} has won the game.`;
     }
@@ -42,7 +48,7 @@ function getStatusText(status, playerId, turn, opponentUsername) {
 function BoardScreen(props) {
   const { playerId } = useContext(AppContext);
   const { gameId } = props.route.params;
-  const { data: getBoardData, error, loading: loadingBoard, subscribeToMore } = useQuery(GET_BOARD_QUERY, {
+  const { data: getBoardData, subscribeToMore } = useQuery(GET_BOARD_QUERY, {
     variables: { gameId },
     fetchPolicy: 'network-only', // Todo: look at these "network-only's"
     onCompleted: () => setBoardPositions(getBoardData.getBoard.positions)
@@ -82,7 +88,7 @@ function BoardScreen(props) {
   const playerColor = playerOne === playerId ? 'w' : 'b';
   const { playerOnePieces, playerTwoPieces } = fallenSoldiers;
   const isPendingMove = selectedCell && pendingMove;
-  const isGameOver = status === 'CHECKMATE' || status === 'STALEMATE' || status === 'DRAW';
+  const isGameOver = endGameStatuses.includes(status);
 
   const doUpdateBoardMutation = async () => {
     await updateBoardMutation({

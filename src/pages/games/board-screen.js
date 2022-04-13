@@ -48,7 +48,7 @@ function getStatusText(status, playerId, turn, opponentUsername) {
 function BoardScreen(props) {
   const { playerId } = useContext(AppContext);
   const { gameId } = props.route.params;
-  const { data: getBoardData, error, loading: loadingBoard, subscribeToMore } = useQuery(GET_BOARD_QUERY, {
+  const { data: getBoardData, subscribeToMore } = useQuery(GET_BOARD_QUERY, {
     variables: { gameId },
     fetchPolicy: 'network-only', // Todo: look at these "network-only's"
     onCompleted: () => setBoardPositions(getBoardData.getBoard.positions)
